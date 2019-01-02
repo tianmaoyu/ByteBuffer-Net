@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2050
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BufferWriteAndRead", "BufferWriteAndRead\BufferWriteAndRead.csproj", "{FD5641B6-3512-4427-BD04-9A0B27C893EC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FD5641B6-3512-4427-BD04-9A0B27C893EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD5641B6-3512-4427-BD04-9A0B27C893EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD5641B6-3512-4427-BD04-9A0B27C893EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD5641B6-3512-4427-BD04-9A0B27C893EC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {517FF7FB-19FB-45C7-AD2C-3775DCD27163}
+	EndGlobalSection
+EndGlobal
