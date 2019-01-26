@@ -16,7 +16,10 @@ namespace BufferWriteAndRead
 
         static void Main(string[] args)
         {
+          
+            ByteBufferReflection.test();
 
+            return;
             var bytes=  System.Text.Encoding.UTF8.GetBytes("n你好");
             foreach(var b in bytes)
             {

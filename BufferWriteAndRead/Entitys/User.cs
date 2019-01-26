@@ -44,6 +44,8 @@ namespace BufferWriteAndRead.Entitys
         }
     }
 
+   
+
     public class ByteHelper
     {
         public static byte[] Int32ToBytes(int value)
