@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2050
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BufferWriteAndRead", "BufferWriteAndRead\BufferWriteAndRead.csproj", "{FD5641B6-3512-4427-BD04-9A0B27C893EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BufferWriteAndRead", "BufferWriteAndRead\BufferWriteAndRead.csproj", "{FD5641B6-3512-4427-BD04-9A0B27C893EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "Web\Web.csproj", "{A567C8A9-FA73-4B9A-9994-53B7564B469F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{FD5641B6-3512-4427-BD04-9A0B27C893EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD5641B6-3512-4427-BD04-9A0B27C893EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD5641B6-3512-4427-BD04-9A0B27C893EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A567C8A9-FA73-4B9A-9994-53B7564B469F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A567C8A9-FA73-4B9A-9994-53B7564B469F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A567C8A9-FA73-4B9A-9994-53B7564B469F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A567C8A9-FA73-4B9A-9994-53B7564B469F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
