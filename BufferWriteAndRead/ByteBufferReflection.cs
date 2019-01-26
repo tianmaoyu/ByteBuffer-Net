@@ -11,6 +11,9 @@ namespace BufferWriteAndRead
 
         public static void test()
         {
+
+         
+
             var msg = new CreateMsg();
 
             msg.UInt16 = 65532;
@@ -20,7 +23,7 @@ namespace BufferWriteAndRead
             msg.Char = 'A';
             msg.Bool = false;
             msg.Name = "eric";
-          
+
             var type = msg.GetType();
             var byteContract = type.GetCustomAttribute<BtyeContract>();
             Console.WriteLine(byteContract == null);
@@ -58,7 +61,7 @@ namespace BufferWriteAndRead
         public ushort UShort { get; set; }
         [ByteMember(9)]
         public String Name { get; set; }
-      
+
     }
 
     /// <summary>
@@ -70,14 +73,67 @@ namespace BufferWriteAndRead
         {
             var buffer = new byte[32];
             var offset = 0;
+            foreach (var _byte in BitConverter.GetBytes(this.UInt16))
+            {
+                buffer[offset] = _byte;
+                offset += 1;
+            }
+
+            buffer[offset] = (byte)this.Char;
+            offset += 1;
+
+
+            buffer[offset] = (byte)(this.Bool?1:0);
+            offset += 1;
+
+            foreach (var _byte in BitConverter.GetBytes(this.Char))
+            {
+                buffer[offset] = _byte;
+                offset += 1;
+            }
+
+            foreach (var _byte in BitConverter.GetBytes(this.Int16))
+            {
+                buffer[offset] = _byte;
+                offset += 1;
+            }
+
+            foreach (var _byte in BitConverter.GetBytes(this.Float))
+            {
+                buffer[offset] = _byte;
+                offset += 1;
+            }
+
+            foreach (var _byte in BitConverter.GetBytes(this.Float))
+            {
+                buffer[offset] = _byte;
+                offset += 1;
+            }
+
+            Program.Clientbuffer[offset] = Byte;
+            offset += 1;
+
+
+            var nameBytes = System.Text.Encoding.UTF8.GetBytes(this.Name);
+            Program.Clientbuffer[offset] = (byte)nameBytes.Length;
+            offset += 1;
+            foreach (var _byte in nameBytes)
+            {
+
+                buffer[offset] = _byte;
+                offset += 1;
+            }
 
             return buffer;
         }
 
-        
-        public static CreateMsg Read(byte[] buffer)
+
+        public static CreateMsg Read(byte[] buffer,int offset)
         {
             var msg = new CreateMsg();
+            //var
+
+
 
 
             return msg;

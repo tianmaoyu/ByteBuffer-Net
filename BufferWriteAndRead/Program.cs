@@ -2,6 +2,8 @@
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -16,7 +18,16 @@ namespace BufferWriteAndRead
 
         static void Main(string[] args)
         {
-          
+            var assembly = Assembly.GetExecutingAssembly();
+
+            var module = assembly.GetModules();
+            var types = module[0].GetTypes().Where(i => i.GetCustomAttribute<BtyeContract>() != null);
+            foreach(var type in types)
+            {
+                Console.WriteLine(type.Name);
+            }
+
+
             ByteBufferReflection.test();
 
             return;
