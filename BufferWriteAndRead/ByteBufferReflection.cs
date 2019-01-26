@@ -37,7 +37,7 @@ namespace BufferWriteAndRead
     }
 
     [BtyeContract]
-    public class CreateMsg
+    public partial class CreateMsg
     {
         [ByteMember(1)]
         public UInt16 UInt16 { get; set; }
@@ -59,6 +59,30 @@ namespace BufferWriteAndRead
         [ByteMember(9)]
         public String Name { get; set; }
       
+    }
+
+    /// <summary>
+    ///  读写
+    /// </summary>
+    public partial class CreateMsg
+    {
+        public byte[] Write()
+        {
+            var buffer = new byte[32];
+            var offset = 0;
+
+            return buffer;
+        }
+
+        
+        public static CreateMsg Read(byte[] buffer)
+        {
+            var msg = new CreateMsg();
+
+
+            return msg;
+        }
+
     }
 
 
