@@ -18,14 +18,22 @@ namespace BufferWriteAndRead
 
         static void Main(string[] args)
         {
-            var assembly = Assembly.GetExecutingAssembly();
-
-            var module = assembly.GetModules();
-            var types = module[0].GetTypes().Where(i => i.GetCustomAttribute<BtyeContract>() != null);
-            foreach(var type in types)
+            var assembly = Assembly.LoadFile(@"E:\BufferWriteAndRead\BufferWriteAndRead\BufferWriteAndRead\bin\BufferWriteAndRead.dll");
+            var modules = assembly.GetModules();
+            foreach(var module in modules)
             {
-                Console.WriteLine(type.Name);
+
+                foreach (var type in module.GetTypes())
+                {
+                    foreach(var item in type.GetCustomAttributes().Where(i => i.GetType().Name.Equals("BtyeContract")))
+                    {
+                        Console.WriteLine(type.Name);
+                    }
+
+                  
+                }
             }
+          
 
 
             ByteBufferReflection.test();

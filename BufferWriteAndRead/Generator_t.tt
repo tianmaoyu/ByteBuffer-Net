@@ -49,14 +49,12 @@ public class EntityTemplate : CSharpTemplate
 	}
 	public override string TransformText()
 	{
-		//base.TransformText();
+		
 #>
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Acadsoc.Entity.Aclassroom
 {
@@ -66,6 +64,8 @@ namespace Acadsoc.Entity.Aclassroom
       
    }
 }
+
+
 <#+
 		return this.GenerationEnvironment.ToString();
 	}

@@ -26,15 +26,6 @@
     <None Update="Generator_t.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Generator_t.cs</LastGenOutput>
-    </None>
-    <None Update="RuntimeTextTemplate1.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>RuntimeTextTemplate1.cs</LastGenOutput>
-      <LastOutputs></LastOutputs>
-    </None>
-    <None Update="Script1.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Script1.cs</LastGenOutput>
       <LastOutputs></LastOutputs>
     </None>
   </ItemGroup>
@@ -48,16 +39,6 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Generator_t.tt</DependentUpon>
-    </Compile>
-    <Compile Update="RuntimeTextTemplate1.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>RuntimeTextTemplate1.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Script1.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Script1.tt</DependentUpon>
     </Compile>
   </ItemGroup>
 
