@@ -175,6 +175,8 @@ namespace BufferWriteAndRead
             var _index = index;
             index += 2;//不读 type
 
+
+
             var IdBytes = Program.Clientbuffer.AsSpan(index, 2);
             this.Id = BitConverter.ToUInt16(IdBytes);
             index += 2;

@@ -61,7 +61,7 @@ namespace BufferWriteAndRead
         public byte Byte { get; set; }
 
 
-        [ByteMember(7, ByteType.Uint16)]
+        [ByteMember(7, ByteType.Uint8)]
         public sbyte SByte { get; set; }
 
         [ByteMember(8, ByteType.Uint16)]
@@ -77,7 +77,7 @@ namespace BufferWriteAndRead
     /// </summary>
     public partial class CreateMsg
     {
-        public byte[] Write()
+        public byte[] Write1()
         {
             var buffer = new byte[32];
             var offset = 0;
@@ -130,7 +130,6 @@ namespace BufferWriteAndRead
             offset += 1;
             foreach (var _byte in nameBytes)
             {
-
                 buffer[offset] = _byte;
                 offset += 1;
             }
@@ -139,7 +138,7 @@ namespace BufferWriteAndRead
         }
 
 
-        public static CreateMsg Read(byte[] buffer,int offset)
+        public static CreateMsg Read1(byte[] buffer,int offset)
         {
             var msg = new CreateMsg();
             //var
