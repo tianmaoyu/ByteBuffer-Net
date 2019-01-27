@@ -20,14 +20,6 @@ namespace BufferWriteAndRead
         {
 
             CodeGenerate.Run();
-
-
-
-
-         
-          
-
-
             ByteBufferReflection.test();
 
             return;
