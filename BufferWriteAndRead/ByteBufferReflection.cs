@@ -31,7 +31,7 @@ namespace BufferWriteAndRead
             foreach (var property in type.GetProperties())
             {
                 var byteMember = property.GetCustomAttribute<ByteMember>();
-                Console.WriteLine($"属性:{property.Name}  值：{property.GetValue(msg)}  :类型{property.PropertyType}  顺序：{byteMember.order}");
+                Console.WriteLine($"属性:{property.Name}  值：{property.GetValue(msg)}  :类型{property.PropertyType}  顺序：{byteMember.Order}");
             }
 
         }
@@ -42,24 +42,32 @@ namespace BufferWriteAndRead
     [BtyeContract]
     public partial class CreateMsg
     {
-        [ByteMember(1)]
+        [ByteMember(1,ByteType.Uint16)]
         public UInt16 UInt16 { get; set; }
-        [ByteMember(2)]
+
+        [ByteMember(2, ByteType.Uint8)]
         public char Char { get; set; }
-        [ByteMember(3)]
+
+        [ByteMember(3, ByteType.Int8)]
         public bool Bool { get; set; }
-        [ByteMember(4)]
+
+        [ByteMember(4, ByteType.Int16)]
         public Int16 Int16 { get; set; }
-        [ByteMember(5)]
+
+        [ByteMember(5, ByteType.Float32)]
         public float Float { get; set; }
 
-        [ByteMember(6)]
+        [ByteMember(6, ByteType.Int8)]
         public byte Byte { get; set; }
-        [ByteMember(7)]
+
+
+        [ByteMember(7, ByteType.Uint16)]
         public sbyte SByte { get; set; }
-        [ByteMember(8)]
+
+        [ByteMember(8, ByteType.Uint16)]
         public ushort UShort { get; set; }
-        [ByteMember(9)]
+
+        [ByteMember(9, ByteType.String)]
         public String Name { get; set; }
 
     }
@@ -73,6 +81,9 @@ namespace BufferWriteAndRead
         {
             var buffer = new byte[32];
             var offset = 0;
+
+           
+
             foreach (var _byte in BitConverter.GetBytes(this.UInt16))
             {
                 buffer[offset] = _byte;

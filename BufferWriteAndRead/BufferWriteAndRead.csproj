@@ -23,23 +23,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Generator_t.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Generator_t.cs</LastGenOutput>
-      <LastOutputs></LastOutputs>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Generator_t.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Generator_t.tt</DependentUpon>
-    </Compile>
+    <Folder Include="Generate\" />
   </ItemGroup>
 
 </Project>

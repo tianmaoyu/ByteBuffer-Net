@@ -20,10 +20,13 @@ namespace BufferWriteAndRead
     [AttributeUsage(AttributeTargets.Property)]
     public class ByteMember : Attribute
     {
-        public int order { get; set; }
-        public ByteMember(int order)
+        public int Order { get; set; }
+
+        public ByteType ByteType { get; set; }
+        public ByteMember(int order, ByteType tyteType)
         {
-            this.order = order;
+            this.Order = order;
+            this.ByteType = tyteType;
         }
     }
 
