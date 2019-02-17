@@ -229,6 +229,11 @@ namespace BufferWriteAndRead
             }
 
             Program.Clientbuffer[_index] = 1;//1 已经写完 待读状态
+
+
+
+
+
         }
     }
 
