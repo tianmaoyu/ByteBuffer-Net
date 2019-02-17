@@ -73,7 +73,14 @@ namespace BufferWriteAndRead
             str += WriteFloor();
             return str;
         }
-
+        private static string Get_Class(CodeClassInfo codeClassInfo)
+        {
+            var str = Get_Class_Header(codeClassInfo);
+            str += Get_WriteMethod(codeClassInfo);
+            str += Get_ReadMethod(codeClassInfo);
+            str += Get_Class_Foot();
+            return str;
+        }
 
         private static string Get_Class_Header(CodeClassInfo codeClassInfo)
         {
@@ -90,10 +97,7 @@ namespace BufferWriteAndRead
             return str;
         }
 
-        private static string Get_Class(CodeClassInfo codeClassInfo)
-        {
-            return null;
-        }
+      
 
         private static string Get_Class_Foot()
         {
@@ -103,51 +107,87 @@ namespace BufferWriteAndRead
             return str;
         }
 
-        
-        private static string Get_WriteMethod_Header()
+
+       
+
+        private static string Get_WriteMethod(CodeClassInfo codeClassInfo)
         {
-            var str = string.Format(@"  
-            public byte[] Write()
-             {{
-                var buffer = new byte[32];
-                var offset = 0;");
+            var str = CodeWriteHelper.Get_Method_Header();
+            foreach (var info in codeClassInfo.MemberList)
+            {
+                switch (info.ByteType)
+                {
+                    case ByteType.Int8:
+                        str += CodeWriteHelper.GetInt8(info);
+                        break;
+                    case ByteType.Uint8:
+                        str += CodeWriteHelper.GetUInt8(info);
+                        break;
+                    case ByteType.Int16:
+                        str += CodeWriteHelper.GetInt16(info);
+                        break;
+                    case ByteType.Uint16:
+                        str += CodeWriteHelper.GetUInt16(info);
+                        break;
+                    case ByteType.Int32:
+                        str += CodeWriteHelper.GetInt32(info);
+                        break;
+                    case ByteType.Uint32:
+                        str += CodeWriteHelper.GetUInt32(info);
+                        break;
+                    case ByteType.Float32:
+                        str += CodeWriteHelper.GetFloat32(info);
+                        break;
+                    case ByteType.Float64:
+                        str += CodeWriteHelper.GetFloat64(info);
+                        break;
+                    case ByteType.String:
+                        str += CodeWriteHelper.GetString(info);
+                        break;
+                }
+            }
+            str += CodeWriteHelper.Get_Method_Foot();
             return str;
         }
 
-        private static string Get_WriteMethod()
-        {
-            return null;
-        }
-
-        private static string Get_WriteMethod_Foot()
-        {
-           var str= string.Format(@"
-                return buffer;
-              }}");
-            return str;
-        }
-
-
-        private static string Get_ReadMethod_Header(CodeClassInfo codeClassInfo)
-        {
-            var str = string.Format(@"
-            public static CreateMsg Read(byte[] buffer,int offset)
-              {{
-                var msg = new {0}();", codeClassInfo.ClassName);
-            return str;
-        }
-
-        private static string Get_ReadMethod()
-        {
-            return null;
-        }
-
-        private static string Get_ReadMethod_Foot()
+        private static string Get_ReadMethod(CodeClassInfo codeClassInfo)
         {
 
-            var str= string.Format(@"
-                return msg;
-              }}");
+            var str = CodeReadHelper.Get_Method_Header(codeClassInfo);
+            foreach (var info in codeClassInfo.MemberList)
+            {
+                switch (info.ByteType)
+                {
+                    case ByteType.Int8:
+                        str += CodeReadHelper.GetInt8(info);
+                        break;
+                    case ByteType.Uint8:
+                        str += CodeReadHelper.GetUInt8(info);
+                        break;
+                    case ByteType.Int16:
+                        str += CodeReadHelper.GetInt16(info.Name);
+                        break;
+                    case ByteType.Uint16:
+                        str += CodeReadHelper.GetUInt16(info.Name);
+                        break;
+                    case ByteType.Int32:
+                        str += CodeReadHelper.GetInt32(info.Name);
+                        break;
+                    case ByteType.Uint32:
+                        str += CodeReadHelper.GetUInt32(info.Name);
+                        break;
+                    case ByteType.Float32:
+                        str += CodeReadHelper.GetFloat32(info.Name);
+                        break;
+                    case ByteType.Float64:
+                        str += CodeReadHelper.GetFloat64(info.Name);
+                        break;
+                    case ByteType.String:
+                        str += CodeReadHelper.GetString(info.Name);
+                        break;
+                }
+            }
+            str += CodeReadHelper.Get_Method_Foot();
             return str;
         }
 
@@ -331,6 +371,24 @@ namespace BufferWriteAndRead
         private static byte[] buffer = new byte[20];
         private static int offset = 0;
 
+        public static string Get_Method_Header()
+        {
+            var str = string.Format(@"  
+            public byte[] Write()
+             {{
+                var buffer = new byte[32];
+                var offset = 0;");
+            return str;
+        }
+
+        public static string Get_Method_Foot()
+        {
+            var str = string.Format(@"
+                return buffer;
+              }}");
+            return str;
+        }
+
         public static string GetInt8(CodeMemberInfo memberInfo)
         {
             //buffer[offset] = Convert.ToByte(memberInfo.Name); ;
@@ -463,6 +521,25 @@ namespace BufferWriteAndRead
 
     public class CodeReadHelper
     {
+
+
+        public static string Get_Method_Header(CodeClassInfo codeClassInfo)
+        {
+            var str = string.Format(@"
+            public static CreateMsg Read(byte[] buffer,int offset)
+              {{
+                var msg = new {0}();", codeClassInfo.ClassName);
+            return str;
+        }
+
+        public static string Get_Method_Foot()
+        {
+            var str = string.Format(@"
+                return buffer;
+              }}");
+            return str;
+        }
+
 
         public static string GetInt8(CodeMemberInfo info)
         {
