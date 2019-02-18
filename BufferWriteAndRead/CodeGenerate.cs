@@ -39,12 +39,11 @@ namespace BufferWriteAndRead
                     menberInfo.TypeName = property.PropertyType.Name;
                     codeClassInfo.MemberList.Add(menberInfo);
                 }
-
-                Console.WriteLine(codeClassInfo.ClassName);
-                foreach (var info in codeClassInfo.MemberList.OrderBy(i => i.Order))
-                {
-                    Console.WriteLine($"name:{info.Name} type:{info.ByteType.ToString()} order:{info.Order}");
-                }
+                codeClassInfo.MemberList= codeClassInfo.MemberList.OrderBy(i => i.Order).ToList();
+                //foreach (var info in codeClassInfo.MemberList.OrderBy(i => i.Order))
+                //{
+                //    Console.WriteLine($"name:{info.Name} type:{info.ByteType.ToString()} order:{info.Order}");
+                //}
 
                 var nameSpaces = codeClassInfo.NameSpace.Split(".");
                 var inerPath = string.Empty;
@@ -61,7 +60,6 @@ namespace BufferWriteAndRead
                 fileStream.Close();
                 var codeStr = Get_Class(codeClassInfo);
                 File.WriteAllText(fileName, codeStr, Encoding.UTF8);
-
             }
 
         }
