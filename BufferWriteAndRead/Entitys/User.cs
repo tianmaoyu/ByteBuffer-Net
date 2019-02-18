@@ -16,10 +16,10 @@ namespace BufferWriteAndRead.Entitys
         [ByteMember(2, ByteType.Int8)]
         public char Char { get; set; }
 
-        [ByteMember(2, ByteType.Int8)]
+        [ByteMember(3, ByteType.Int8)]
         public bool Bool { get; set; }
 
-        [ByteMember(2, ByteType.Int16)]
+        [ByteMember(4, ByteType.Int16)]
         public Int16 Int16 { get; set; }
 
         public float Float { get; set; }
@@ -30,27 +30,30 @@ namespace BufferWriteAndRead.Entitys
 
         public sbyte SByte { get; set; }
 
-        [ByteMember(2, ByteType.Uint16)]
+        [ByteMember(5, ByteType.Uint16)]
         public ushort UShort { get; set; }
 
-
-        public byte[] Serialize()
-        {
-            var bytes = new byte[14];
-            Span<byte> span = new Span<byte>(bytes);
-
-            //BitConverter.w(UInt16);
-
-            return new byte[2];
-        }
+        [ByteMember(6, ByteType.Uint16)]
+        public int Id { get; set; }
 
 
-        public User Deserialize(ArraySegment<byte> arraySegment)
-        {
-            var user = new User();
+        //public byte[] Serialize()
+        //{
+        //    var bytes = new byte[14];
+        //    Span<byte> span = new Span<byte>(bytes);
 
-            return user;
-        }
+        //    //BitConverter.w(UInt16);
+
+        //    return new byte[2];
+        //}
+
+
+        //public User Deserialize(ArraySegment<byte> arraySegment)
+        //{
+        //    var user = new User();
+
+        //    return user;
+        //}
     }
 
    

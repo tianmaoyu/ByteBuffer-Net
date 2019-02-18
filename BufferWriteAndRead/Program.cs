@@ -20,7 +20,7 @@ namespace BufferWriteAndRead
         {
 
             CodeGenerate.Run();
-            ByteBufferReflection.test();
+            //ByteBufferReflection.test();
 
             return;
             //var bytes=  System.Text.Encoding.UTF8.GetBytes("n你好");

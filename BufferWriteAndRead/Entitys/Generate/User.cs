@@ -30,6 +30,11 @@ namespace BufferWriteAndRead.Entitys
             {
                 buffer[offset] = _byte;
                 offset += 1;
+            }   
+            foreach (var _byte in BitConverter.GetBytes(Convert.ToUInt16(this.Id)))
+            {
+                buffer[offset] = _byte;
+                offset += 1;
             } 
             return buffer;
         }
@@ -45,6 +50,8 @@ namespace BufferWriteAndRead.Entitys
             msg.Int16=BitConverter.ToInt16(buffer, offset);
             offset+=2;
             msg.UShort=BitConverter.ToUInt16(buffer, offset);
+            offset+=2;
+            msg.Id=BitConverter.ToUInt16(buffer, offset);
             offset+=2;
             return msg;
         } 
