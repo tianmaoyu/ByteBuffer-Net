@@ -146,8 +146,8 @@ namespace BufferWriteAndRead
 
         //}
 
-        [BtyeContract]
-    public class Msg1 : IMsg
+   
+    public partial class Msg1 : IMsg
     {
         [ByteMember(1, ByteType.Int8)]
         public MsgType MsgType { get; set; } = MsgType.type1;

@@ -11,6 +11,8 @@ namespace BufferWriteAndRead
     {
         public static void Run()
         {
+            var projectPath = Path.GetFullPath("../../..");
+
             var assmble = Assembly.GetExecutingAssembly();
             var modules = assmble.GetModules();
             var types = new List<Type>();
@@ -21,24 +23,20 @@ namespace BufferWriteAndRead
             }
             foreach (var type in types)
             {
-                // Console.WriteLine(type.Name);  
-
                 var codeClassInfo = new CodeClassInfo();
                 codeClassInfo.ClassName = type.Name;
+                codeClassInfo.NameSpace = type.Namespace;
                 codeClassInfo.MemberList = new List<CodeMemberInfo>();
                 var propertyes = type.GetRuntimeProperties().Where(i => i.GetCustomAttribute<ByteMember>() != null);
 
                 foreach (var property in propertyes)
                 {
-
                     var menberInfo = new CodeMemberInfo();
                     var byteMember = property.GetCustomAttribute<ByteMember>();
                     menberInfo.Name = property.Name;
                     menberInfo.ByteType = byteMember.ByteType;
                     menberInfo.Order = byteMember.Order;
                     menberInfo.TypeName = property.PropertyType.Name;
-                    //menberInfo.TypeCode = property.MemberType.GetTypeCode();
-
                     codeClassInfo.MemberList.Add(menberInfo);
                 }
 
@@ -47,20 +45,26 @@ namespace BufferWriteAndRead
                 {
                     Console.WriteLine($"name:{info.Name} type:{info.ByteType.ToString()} order:{info.Order}");
                 }
-                var projectPath = Path.GetFullPath("../../..");
-                var codeStr = Get_Class(codeClassInfo);
-                var fileName = projectPath + @"\Generate\" + codeClassInfo.ClassName + ".cs";
+
+                var nameSpaces = codeClassInfo.NameSpace.Split(".");
+                var inerPath = string.Empty;
+                for (var i = 1; i < nameSpaces.Length; i++)
+                {
+                    inerPath += "\\" + nameSpaces[i];
+                }
+               
+                var fileDir = projectPath + inerPath + @"\Generate\";
+                if (!Directory.Exists(fileDir)) Directory.CreateDirectory(fileDir);
+                var fileName = projectPath + inerPath + @"\Generate\" + codeClassInfo.ClassName + ".cs";
+                if (File.Exists(fileName)) continue;
                 var fileStream = File.Create(fileName);
                 fileStream.Close();
+                var codeStr = Get_Class(codeClassInfo);
                 File.WriteAllText(fileName, codeStr, Encoding.UTF8);
 
             }
 
         }
-
-
-
-
 
 
         private static string Get_Class(CodeClassInfo codeClassInfo)
@@ -80,14 +84,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-namespace BufferWriteAndRead
+namespace {1}
 {{
      public partial class {0}
-     {{", codeClassInfo.ClassName);
+     {{", codeClassInfo.ClassName, codeClassInfo.NameSpace);
             return str;
         }
-
-
 
         private static string Get_Class_Foot()
         {
@@ -96,9 +98,6 @@ namespace BufferWriteAndRead
 }}");
             return str;
         }
-
-
-
 
         private static string Get_WriteMethod(CodeClassInfo codeClassInfo)
         {
@@ -204,6 +203,8 @@ namespace BufferWriteAndRead
     public class CodeClassInfo
     {
         public string ClassName { get; set; }
+
+        public string NameSpace { get; set; }
 
         public List<CodeMemberInfo> MemberList { get; set; }
     }
@@ -372,7 +373,7 @@ namespace BufferWriteAndRead
         public static string Get_Method_Header(CodeClassInfo codeClassInfo)
         {
             var str = string.Format(@"
-        public static CreateMsg Read(byte[] buffer,int offset)
+        public static {0} Read(byte[] buffer,int offset)
         {{
             var msg = new {0}();", codeClassInfo.ClassName);
             return str;
@@ -381,7 +382,7 @@ namespace BufferWriteAndRead
         public static string Get_Method_Foot()
         {
             var str = string.Format(@"
-            return buffer;
+            return msg;
         }}");
             return str;
         }

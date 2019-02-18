@@ -4,14 +4,22 @@ using System.Text;
 
 namespace BufferWriteAndRead.Entitys
 {
-    public class User
+    [BtyeContract]
+    public partial class User
     {
+        [ByteMember(1,ByteType.Uint16)]
         public UInt16 UInt16 { get; set; }
 
+        /// <summary>
+        /// Char 是 二字节的
+        /// </summary>
+        [ByteMember(2, ByteType.Int8)]
         public char Char { get; set; }
 
+        [ByteMember(2, ByteType.Int8)]
         public bool Bool { get; set; }
 
+        [ByteMember(2, ByteType.Int16)]
         public Int16 Int16 { get; set; }
 
         public float Float { get; set; }
@@ -22,6 +30,7 @@ namespace BufferWriteAndRead.Entitys
 
         public sbyte SByte { get; set; }
 
+        [ByteMember(2, ByteType.Uint16)]
         public ushort UShort { get; set; }
 
 
