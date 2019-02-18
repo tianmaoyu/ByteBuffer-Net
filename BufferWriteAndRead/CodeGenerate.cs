@@ -9,8 +9,6 @@ namespace BufferWriteAndRead
 {
     public class CodeGenerate
     {
-        private const string projectPath = @"E:\BufferWriteAndRead\BufferWriteAndRead\BufferWriteAndRead";
-
         public static void Run()
         {
             var assmble = Assembly.GetExecutingAssembly();
@@ -49,10 +47,9 @@ namespace BufferWriteAndRead
                 {
                     Console.WriteLine($"name:{info.Name} type:{info.ByteType.ToString()} order:{info.Order}");
                 }
-
-                //var path = AppDomain.CurrentDomain.BaseDirectory;
-                var codeStr = WriteCode(codeClassInfo);
-                var fileName = @"E:\BufferWriteAndRead\BufferWriteAndRead\BufferWriteAndRead\Generate\" + codeClassInfo.ClassName + ".cs";
+                var projectPath = Path.GetFullPath("../../..");
+                var codeStr = Get_Class(codeClassInfo);
+                var fileName = projectPath + @"\Generate\" + codeClassInfo.ClassName + ".cs";
                 var fileStream = File.Create(fileName);
                 fileStream.Close();
                 File.WriteAllText(fileName, codeStr, Encoding.UTF8);
@@ -65,14 +62,7 @@ namespace BufferWriteAndRead
 
 
 
-        public static string WriteCode(CodeClassInfo codeClassInfo)
-        {
-            var str = WriteHeader(codeClassInfo);
-            str += Write_WriteMethod(codeClassInfo);
-            str += Write_ReadMethod(codeClassInfo);
-            str += WriteFloor();
-            return str;
-        }
+
         private static string Get_Class(CodeClassInfo codeClassInfo)
         {
             var str = Get_Class_Header(codeClassInfo);
@@ -97,7 +87,7 @@ namespace BufferWriteAndRead
             return str;
         }
 
-      
+
 
         private static string Get_Class_Foot()
         {
@@ -108,7 +98,7 @@ namespace BufferWriteAndRead
         }
 
 
-       
+
 
         private static string Get_WriteMethod(CodeClassInfo codeClassInfo)
         {
@@ -192,150 +182,6 @@ namespace BufferWriteAndRead
         }
 
 
-        private static string Write_WriteMethod(CodeClassInfo codeClassInfo)
-        {
-            var str = string.Format(@"  
-       public byte[] Write()
-        {{
-            var buffer = new byte[32];
-            var offset = 0;"
-    );
-
-            foreach (var info in codeClassInfo.MemberList)
-            {
-
-                if (info.ByteType == ByteType.String)
-                {
-
-                    str += string.Format(@"
-
-           var nameBytes = System.Text.Encoding.UTF8.GetBytes(this.{0});
-            buffer[offset] = (byte)nameBytes.Length;
-            offset += 1;
-            foreach (var _byte in nameBytes)
-            {{
-                buffer[offset] = _byte;
-                offset += 1;
-            }}
-", info.Name);
-
-                }
-
-
-                else
-                {
-                    str += string.Format(@"
-
-           foreach (var _byte in BitConverter.GetBytes(this.{0}))
-            {{
-                buffer[offset] = _byte;
-                offset += 1;
-            }}
-", info.Name);
-                }
-
-
-            }
-
-
-            str += string.Format(@"
-     return buffer;
-        }}
-
-");
-
-            return str;
-        }
-        private static string Write_ReadMethod(CodeClassInfo codeClassInfo)
-        {
-            var str = string.Format(@"
-
-        public static CreateMsg Read(byte[] buffer,int offset)
-        {{
-            var msg = new {0}();
-
-", codeClassInfo.ClassName);
-
-            foreach (var info in codeClassInfo.MemberList)
-            {
-
-                switch (info.ByteType)
-                {
-
-                    case ByteType.Int8:
-                        str += CodeReadHelper.GetInt8(info);
-                        break;
-                    case ByteType.Uint8:
-                        str += CodeReadHelper.GetUInt8(info);
-                        break;
-                    case ByteType.Int16:
-                        str += CodeReadHelper.GetInt16(info.Name);
-                        break;
-                    case ByteType.Uint16:
-                        str += CodeReadHelper.GetUInt16(info.Name);
-                        break;
-                    case ByteType.Int32:
-                        str += CodeReadHelper.GetInt32(info.Name);
-                        break;
-                    case ByteType.Uint32:
-                        str += CodeReadHelper.GetUInt32(info.Name);
-                        break;
-                    case ByteType.Float32:
-                        str += CodeReadHelper.GetFloat32(info.Name);
-                        break;
-                    case ByteType.Float64:
-                        str += CodeReadHelper.GetFloat64(info.Name);
-                        break;
-
-                    case ByteType.String:
-                        str += CodeReadHelper.GetString(info.Name);
-                        break;
-
-                }
-
-            }
-
-            str += string.Format(@"
-      return msg;
-        }}
-");
-
-            return str;
-        }
-
-
-
-        private static string WriteHeader(CodeClassInfo codeClassInfo)
-        {
-            var str = String.Format(@"
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-namespace BufferWriteAndRead
-{{
- public partial class {0}
-    {{
-
-
-", codeClassInfo.ClassName);
-
-            return str;
-        }
-
-        private static string WriteFloor()
-        {
-
-            var str = String.Format(@" 
-   }}
-}}"
-    );
-            return str;
-        }
-
-
-
     }
 
 
@@ -374,18 +220,18 @@ namespace BufferWriteAndRead
         public static string Get_Method_Header()
         {
             var str = string.Format(@"  
-            public byte[] Write()
-             {{
-                var buffer = new byte[32];
-                var offset = 0;");
+        public byte[] Write()
+        {{
+            var buffer = new byte[32];
+            var offset = 0;");
             return str;
         }
 
         public static string Get_Method_Foot()
         {
             var str = string.Format(@"
-                return buffer;
-              }}");
+            return buffer;
+        }}");
             return str;
         }
 
@@ -405,7 +251,7 @@ namespace BufferWriteAndRead
             //offset += 1;
 
             var str = string.Format(@"  
-            buffer[offset] = Convert.ToSByte(this.{0});
+            buffer[offset] = Convert.ToByte(this.{0});
             offset += 1;", memberInfo.Name);
             return str;
         }
@@ -526,40 +372,35 @@ namespace BufferWriteAndRead
         public static string Get_Method_Header(CodeClassInfo codeClassInfo)
         {
             var str = string.Format(@"
-            public static CreateMsg Read(byte[] buffer,int offset)
-              {{
-                var msg = new {0}();", codeClassInfo.ClassName);
+        public static CreateMsg Read(byte[] buffer,int offset)
+        {{
+            var msg = new {0}();", codeClassInfo.ClassName);
             return str;
         }
 
         public static string Get_Method_Foot()
         {
             var str = string.Format(@"
-                return buffer;
-              }}");
+            return buffer;
+        }}");
             return str;
         }
 
 
         public static string GetInt8(CodeMemberInfo info)
         {
-
             if (info.TypeName.Equals("Boolean"))
             {
                 var str = string.Format(@"
-                  msg.{0}=buffer[offset]==1;
-                  offset++;
-               ", info.Name, info.TypeName);
-
+            msg.{0}=buffer[offset]==1;
+            offset++; ", info.Name, info.TypeName);
                 return str;
             }
             else
             {
                 var str = string.Format(@"
-                  msg.{0}=({1})buffer[offset];
-                  offset++;
-               ", info.Name, info.TypeName);
-
+            msg.{0}=({1})buffer[offset];
+            offset++; ", info.Name, info.TypeName);
                 return str;
             }
 
@@ -567,77 +408,62 @@ namespace BufferWriteAndRead
         public static string GetUInt8(CodeMemberInfo info)
         {
             var str = string.Format(@"
-                msg.{0}=({1})buffer[offset];
-                offset++;
-               ", info.Name, info.TypeName);
-
+            msg.{0}=({1})buffer[offset];
+            offset++;", info.Name, info.TypeName);
             return str;
         }
         public static string GetInt16(string propertName)
         {
             var str = string.Format(@"
-                msg.{0}=BitConverter.ToInt16(buffer, offset);
-                offset+=2;
-               ", propertName);
-
+            msg.{0}=BitConverter.ToInt16(buffer, offset);
+            offset+=2;", propertName);
             return str;
         }
         public static string GetUInt16(string propertName)
         {
 
             var str = string.Format(@"
-                msg.{0}=BitConverter.ToUInt16(buffer, offset);
-                offset+=2;
-               ", propertName);
-
+            msg.{0}=BitConverter.ToUInt16(buffer, offset);
+            offset+=2;", propertName);
             return str;
         }
         public static string GetInt32(string propertName)
         {
 
             var str = string.Format(@"
-                 msg.{0}=BitConverter.ToInt32(buffer, offset);
-                 offset+=4;
-               ", propertName);
-
+            msg.{0}=BitConverter.ToInt32(buffer, offset);
+            offset+=4;", propertName);
             return str;
         }
         public static string GetUInt32(string propertName)
         {
             var str = string.Format(@"
-                 msg.{0}=BitConverter.ToUInt32(buffer, offset);
-                 offset+=4;
-               ", propertName);
-
+            msg.{0}=BitConverter.ToUInt32(buffer, offset);
+            offset+=4;", propertName);
             return str;
         }
         public static string GetFloat32(string propertName)
         {
 
             var str = string.Format(@"
-                 msg.{0}=BitConverter.ToSingle(buffer, offset);
-                 offset+=4;
-               ", propertName);
-
+            msg.{0}=BitConverter.ToSingle(buffer, offset);
+            offset+=4;", propertName);
             return str;
         }
         public static string GetFloat64(string propertName)
         {
             var str = string.Format(@"
-                msg.{0}=BitConverter.ToDouble(buffer, offset);
-                offset+=8;
-               ", propertName);
-
+            msg.{0}=BitConverter.ToDouble(buffer, offset);
+            offset+=8;", propertName);
             return str;
         }
         public static string GetString(string propertName)
         {
             var str = string.Format(@"
-                 var strLength=buffer[offset];
-                 offset++;
-                 msg.{0}=BitConverter.ToString(buffer, offset,strLength);
-                 offset+=8;
-               ", propertName);
+            var strLength=buffer[offset];
+            offset++;
+            msg.{0}=BitConverter.ToString(buffer, offset,strLength);
+            offset+=8;", propertName);
             return str;
         }
         public static string GetObject()

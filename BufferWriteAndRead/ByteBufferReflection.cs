@@ -158,12 +158,12 @@ namespace BufferWriteAndRead
     public enum ByteType
     {
         /// <summary>
-        /// sbyte :-128 到 127  有符号 8 位整数
+        /// byte 无符号 8 位整数  0 到 255
         /// </summary>
         Int8 = 1,
 
         /// <summary>
-        /// byte 无符号 8 位整数  0 到 255
+        /// sbyte :-128 到 127  有符号 8 位整数
         /// </summary>
         Uint8 = 2,
 
