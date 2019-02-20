@@ -1,11 +1,13 @@
 ﻿using BufferWriteAndRead.Entitys;
 //using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,20 +20,25 @@ namespace BufferWriteAndRead
 
         static void Main(string[] args)
         {
+            var bn = BitConverter.GetBytes('n');
+            var b1 = BitConverter.GetBytes('你');
+            var b2 = BitConverter.GetBytes('好');
+            var bytes = System.Text.Encoding.Unicode.GetBytes("n你好");
+            foreach (var b in bytes)
+            {
+                Console.WriteLine(b);
+            }
+            var str1 = System.Text.Encoding.Unicode.GetString(bytes);
+            var str =  BitConverter.ToString(bytes);
 
+            TestUser();
             CodeGenerate.Run();
             //ByteBufferReflection.test();
 
             return;
-            //var bytes=  System.Text.Encoding.UTF8.GetBytes("n你好");
-            //foreach(var b in bytes)
-            //{
-            //    Console.WriteLine(b);
-            //}
+           
 
-            //var bn= BitConverter.GetBytes('n');
-            //var b1 = BitConverter.GetBytes('你');
-            //var b2 = BitConverter.GetBytes('好');
+
 
             //var client = new Client();
             //client.ClientId = 0;
@@ -52,6 +59,27 @@ namespace BufferWriteAndRead
 
         }
 
+
+        public static void TestUser()
+        {
+            var user = new User();
+            user.Bool = false;
+            user.boolList = new List<bool>() {false,true };
+            //user.Byte = 1;
+            user.Char = 'A';
+            //user.Float = 33.43F;
+            user.floatList = new List<float>() { 12.1F, 12.1F };
+            user.Id = 1;
+            user.IdList = new List<int>() { 1, 2, 3 };
+            user.StringList = new List<string>() { "SS", "ERC" };
+            user.UInt16 = 12;
+            //user.SByte = 1;
+            user.UShort = 2342;
+
+            var buffer = user.Write();
+            var user1 = User.Read(buffer, 0);
+
+        }
 
     }
 

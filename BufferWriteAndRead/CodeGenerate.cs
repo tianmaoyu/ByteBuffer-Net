@@ -129,6 +129,9 @@ namespace {1}
                         str += CodeWriteHelper.GetString(info);
                         break;
                     // array
+                    case ByteType.BoolArray:
+                        str += CodeWriteHelper.GetArrayBool(info);
+                        break;
                     case ByteType.Int8Array:
                         str += CodeWriteHelper.GetArrayInt8(info);
                         break;
@@ -198,6 +201,9 @@ namespace {1}
                         str += CodeReadHelper.GetString(info.Name);
                         break;
                     //arrary
+                    case ByteType.BoolArray:
+                        str += CodeReadHelper.GetArrayBool(info);
+                        break;
                     case ByteType.Int8Array:
                         str += CodeReadHelper.GetArrayInt8(info);
                         break;
@@ -274,7 +280,7 @@ namespace {1}
             var str = string.Format(@"  
         public byte[] Write()
         {{
-            var buffer = new byte[32];
+            var buffer = new byte[64];
             var offset = 0;");
             return str;
         }
@@ -282,7 +288,7 @@ namespace {1}
         public static string Get_Method_Foot()
         {
             var str = string.Format(@"
-            return buffer;
+            return new ArraySegment<byte>(buffer, 0, offset).ToArray();
         }}");
             return str;
         }
@@ -419,15 +425,19 @@ namespace {1}
         #region array
         public static string GetArrayBool(CodeMemberInfo memberInfo)
         {
+           
             var str = string.Format(@"  
             var count{0} = this.{0} == null ? 0 : this.{0}.Count;
             buffer[offset] = (byte)count{0};
             offset++;
-            foreach (var item in this.{0})
-            {{
-                buffer[offset] = (byte)item;
-                offset++;
-            }}", memberInfo.Name);
+            if (count{0} > 0)  
+            {{ 
+                foreach (var item in this.{0})
+                {{
+                     buffer[offset] = (byte)(item?1:0);
+                     offset++;
+                }}
+             }}", memberInfo.Name);
             return str;
         }
         public static string GetArrayInt8(CodeMemberInfo memberInfo)
@@ -445,11 +455,13 @@ namespace {1}
             var count{0} = this.{0} == null ? 0 : this.{0}.Count;
             buffer[offset] = (byte)count{0};
             offset++;
-            foreach (var id in this.{0})
-            {{
-                buffer[offset] = (byte)id;
-                offset++;
-            }}", memberInfo.Name);
+            if (count{0} > 0)  
+            {{ 
+                foreach (var id in this.{0})
+                {{
+                    buffer[offset] = (byte)id;
+                    offset++;
+            }}}}", memberInfo.Name);
             return str;
         }
         public static string GetArrayUInt8(CodeMemberInfo memberInfo)
@@ -458,11 +470,13 @@ namespace {1}
             var count{0} = this.{0} == null ? 0 : this.{0}.Count;
             buffer[offset] = (byte)count{0};
             offset++;
+            if (count{0} > 0)  
+            {{ 
             foreach (var id in this.{0})
             {{
                 buffer[offset] = (byte)id;
                 offset++;
-            }}", memberInfo.Name);
+            }}}}", memberInfo.Name);
             return str;
         }
         public static string GetArrayInt16(CodeMemberInfo memberInfo)
@@ -483,6 +497,8 @@ namespace {1}
             var count{0} = this.{0} == null ? 0 : this.{0}.Count;
             buffer[offset] = (byte)count{0};
             offset++;
+            if (count{0} > 0)  
+            {{ 
             foreach (var item in this.{0})
             {{
                 foreach (var _byte in BitConverter.GetBytes(Convert.ToInt16(item)))
@@ -490,7 +506,7 @@ namespace {1}
                     buffer[offset] = _byte;
                     offset ++;
                 }}
-            }}", memberInfo.Name);
+            }}}}", memberInfo.Name);
             return str;
 
         }
@@ -506,6 +522,8 @@ namespace {1}
             var count{0} = this.{0} == null ? 0 : this.{0}.Count;
             buffer[offset] = (byte)count{0};
             offset++;
+            if (count{0} > 0)  
+            {{ 
             foreach (var item in this.{0})
             {{
                 foreach (var _byte in BitConverter.GetBytes(Convert.ToUInt16(item)))
@@ -513,7 +531,7 @@ namespace {1}
                     buffer[offset] = _byte;
                     offset ++;
                 }}
-            }}", memberInfo.Name);
+            }}}}", memberInfo.Name);
             return str;
         }
 
@@ -528,6 +546,8 @@ namespace {1}
             var count{0} = this.{0} == null ? 0 : this.{0}.Count;
             buffer[offset] = (byte)count{0};
             offset++;
+            if (count{0} > 0)  
+            {{ 
             foreach (var item in this.{0})
             {{
                 foreach (var _byte in BitConverter.GetBytes(item))
@@ -535,7 +555,7 @@ namespace {1}
                     buffer[offset] = _byte;
                     offset ++;
                 }}
-            }}", memberInfo.Name);
+            }}}}", memberInfo.Name);
             return str;
         }
         public static string GetArrayUInt32(CodeMemberInfo memberInfo)
@@ -550,6 +570,8 @@ namespace {1}
             var count{0} = this.{0} == null ? 0 : this.{0}.Count;
             buffer[offset] = (byte)count{0};
             offset++;
+            if (count{0} > 0)  
+            {{ 
             foreach (var item in this.{0})
             {{
                 foreach (var _byte in BitConverter.GetBytes(Convert.ToUInt32(item))))
@@ -557,7 +579,7 @@ namespace {1}
                     buffer[offset] = _byte;
                     offset ++;
                 }}
-            }}", memberInfo.Name);
+            }}}}", memberInfo.Name);
             return str;
 
         }
@@ -567,6 +589,8 @@ namespace {1}
             var count{0} = this.{0} == null ? 0 : this.{0}.Count;
             buffer[offset] = (byte)count{0};
             offset++;
+            if (count{0} > 0)  
+            {{ 
             foreach (var item in this.{0})
             {{
                 foreach (var _byte in BitConverter.GetBytes(item))
@@ -574,7 +598,7 @@ namespace {1}
                     buffer[offset] = _byte;
                     offset ++;
                 }}
-            }}", memberInfo.Name);
+            }}}}", memberInfo.Name);
             return str;
         }
         public static string GetArrayFloat64(CodeMemberInfo memberInfo)
@@ -583,6 +607,8 @@ namespace {1}
             var count{0} = this.{0} == null ? 0 : this.{0}.Count;
             buffer[offset] = (byte)count{0};
             offset++;
+            if (count{0} > 0)  
+            {{ 
             foreach (var item in this.{0})
             {{
                 foreach (var _byte in BitConverter.GetBytes(item))
@@ -590,18 +616,22 @@ namespace {1}
                     buffer[offset] = _byte;
                     offset ++;
                 }}
-            }}", memberInfo.Name);
+            }}}}", memberInfo.Name);
             return str;
         }
         public static string GetArrayString(CodeMemberInfo memberInfo)
         {
+
+
             var str = string.Format(@"  
             var count{0} = this.{0} == null ? 0 : this.{0}.Count;
             buffer[offset] = (byte)count{0};
             offset++;
+            if (count{0} > 0)  
+            {{ 
             foreach (var item in this.{0})
             {{
-                 var nameBytes = System.Text.Encoding.UTF8.GetBytes(item);
+                 var nameBytes = System.Text.Encoding.Unicode.GetBytes(item);
                  buffer[offset] = (byte)nameBytes.Length;
                  offset += 1;
                  foreach (var _byte in nameBytes)
@@ -609,7 +639,7 @@ namespace {1}
                     buffer[offset] = _byte;
                     offset += 1;
                  }}
-            }}", memberInfo.Name);
+            }}}}", memberInfo.Name);
             return str;
         }
         #endregion
@@ -712,7 +742,7 @@ namespace {1}
             var str = string.Format(@"
             var strLength=buffer[offset];
             offset++;
-            msg.{0}=BitConverter.ToString(buffer, offset,strLength);
+            msg.{0}=System.Text.Encoding.Unicode.GetString(buffer, offset,strLength);
             offset+=strLength;", propertName);
             return str;
         }
@@ -900,7 +930,7 @@ namespace {1}
             {{
                 var strLength=buffer[offset];
                 offset++;
-                var item=BitConverter.ToString(buffer, offset,strLength);
+                var item=System.Text.Encoding.Unicode.GetString(buffer, offset,strLength);
                 offset+=strLength;
                 list{0}.Add(item);
             }}

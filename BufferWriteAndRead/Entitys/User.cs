@@ -22,13 +22,13 @@ namespace BufferWriteAndRead.Entitys
         [ByteMember(4, ByteType.Int16)]
         public Int16 Int16 { get; set; }
 
-        public float Float { get; set; }
+        //public float Float { get; set; }
 
-        public DateTime DateTime { get; set; }
+        //public DateTime DateTime { get; set; }
 
-        public byte Byte { get; set; }
+        //public byte Byte { get; set; }
 
-        public sbyte SByte { get; set; }
+        //public sbyte SByte { get; set; }
 
         [ByteMember(5, ByteType.Uint16)]
         public ushort UShort { get; set; }

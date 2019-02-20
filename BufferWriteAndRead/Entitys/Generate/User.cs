@@ -6,96 +6,117 @@ using System.Reflection;
 using System.Text;
 namespace BufferWriteAndRead.Entitys
 {
-    public partial class User
-    {
+     public partial class User
+     {  
         public byte[] Write()
         {
-            var buffer = new byte[32];
-            var offset = 0;
+            var buffer = new byte[64];
+            var offset = 0;  
             foreach (var _byte in BitConverter.GetBytes(Convert.ToUInt16(this.UInt16)))
             {
                 buffer[offset] = _byte;
                 offset += 1;
-            }
+            }   
             buffer[offset] = Convert.ToByte(this.Char);
-            offset += 1;
+            offset += 1;  
             foreach (var _byte in BitConverter.GetBytes(Convert.ToInt16(this.Int16)))
             {
                 buffer[offset] = _byte;
                 offset += 1;
-            }
+            }   
             foreach (var _byte in BitConverter.GetBytes(Convert.ToUInt16(this.UShort)))
             {
                 buffer[offset] = _byte;
                 offset += 1;
-            }
+            }   
             foreach (var _byte in BitConverter.GetBytes(Convert.ToUInt16(this.Id)))
             {
                 buffer[offset] = _byte;
                 offset += 1;
-            }
+            }   
             var countIdList = this.IdList == null ? 0 : this.IdList.Count;
             buffer[offset] = (byte)countIdList;
             offset++;
+            if (countIdList > 0)  
+            { 
             foreach (var item in this.IdList)
             {
                 foreach (var _byte in BitConverter.GetBytes(Convert.ToUInt16(item)))
                 {
                     buffer[offset] = _byte;
-                    offset++;
+                    offset ++;
                 }
-            }
+            }}  
+            var countboolList = this.boolList == null ? 0 : this.boolList.Count;
+            buffer[offset] = (byte)countboolList;
+            offset++;
+            if (countboolList > 0)  
+            { 
+                foreach (var item in this.boolList)
+                {
+                     buffer[offset] = (byte)(item?1:0);
+                     offset++;
+                }
+             }  
             var countIntList = this.IntList == null ? 0 : this.IntList.Count;
             buffer[offset] = (byte)countIntList;
             offset++;
+            if (countIntList > 0)  
+            { 
             foreach (var item in this.IntList)
             {
                 foreach (var _byte in BitConverter.GetBytes(item))
                 {
                     buffer[offset] = _byte;
-                    offset++;
+                    offset ++;
                 }
-            }
+            }}  
             var countfloatList = this.floatList == null ? 0 : this.floatList.Count;
             buffer[offset] = (byte)countfloatList;
             offset++;
+            if (countfloatList > 0)  
+            { 
             foreach (var item in this.floatList)
             {
                 foreach (var _byte in BitConverter.GetBytes(item))
                 {
                     buffer[offset] = _byte;
-                    offset++;
+                    offset ++;
                 }
-            }
+            }}  
             var countStringList = this.StringList == null ? 0 : this.StringList.Count;
             buffer[offset] = (byte)countStringList;
             offset++;
+            if (countStringList > 0)  
+            { 
             foreach (var item in this.StringList)
             {
-                var nameBytes = System.Text.Encoding.UTF8.GetBytes(item);
-                buffer[offset] = (byte)nameBytes.Length;
-                offset += 1;
-                foreach (var _byte in nameBytes)
-                {
+                 var nameBytes = System.Text.Encoding.Unicode.GetBytes(item);
+                 buffer[offset] = (byte)nameBytes.Length;
+                 offset += 1;
+                 foreach (var _byte in nameBytes)
+                 {
                     buffer[offset] = _byte;
                     offset += 1;
-                }
-            }
-            return buffer;
+                 }
+            }}
+            //var _buffer=new Buffer()
+            return new ArraySegment<byte>(buffer, 0, offset).ToArray();
+            //return buffer.CopyTo();
         }
-        public static User Read(byte[] buffer, int offset)
+        public static User Read(byte[] buffer,int offset)
         {
             var msg = new User();
-            msg.UInt16 = BitConverter.ToUInt16(buffer, offset);
-            offset += 2;
-            msg.Char = (Char)buffer[offset];
-            offset++;
-            msg.Int16 = BitConverter.ToInt16(buffer, offset);
-            offset += 2;
-            msg.UShort = BitConverter.ToUInt16(buffer, offset);
-            offset += 2;
-            msg.Id = BitConverter.ToUInt16(buffer, offset);
-            offset += 2;
+            msg.UInt16=BitConverter.ToUInt16(buffer, offset);
+            offset+=2;
+            msg.Char=(Char)buffer[offset];
+            offset++; 
+            msg.Int16=BitConverter.ToInt16(buffer, offset);
+            offset+=2;
+            msg.UShort=BitConverter.ToUInt16(buffer, offset);
+            offset+=2;
+            msg.Id=BitConverter.ToUInt16(buffer, offset);
+            offset+=2;
             var countIdList = buffer[offset];
             offset++;
             var listIdList = new List<int>();
@@ -106,6 +127,16 @@ namespace BufferWriteAndRead.Entitys
                 listIdList.Add(item);
             }
             msg.IdList = listIdList;
+            var countboolList = buffer[offset];
+            offset++;
+            var listboolList = new List<bool>();
+            for (var i = 0; i < countboolList; i++)
+            {
+                var item = buffer[offset]==1;
+                offset++;
+                listboolList.Add(item);
+            }
+            msg.boolList = listboolList; 
             var countIntList = buffer[offset];
             offset++;
             var listIntList = new List<int>();
@@ -131,14 +162,14 @@ namespace BufferWriteAndRead.Entitys
             var listStringList = new List<string>();
             for (var i = 0; i < countStringList; i++)
             {
-                var strLength = buffer[offset];
+                var strLength=buffer[offset];
                 offset++;
-                var item = BitConverter.ToString(buffer, offset, strLength);
-                offset += strLength;
+                var item=System.Text.Encoding.Unicode.GetString(buffer, offset,strLength);
+                offset+=strLength;
                 listStringList.Add(item);
             }
             msg.StringList = listStringList;
             return msg;
-        }
-    }
+        } 
+      }
 }
