@@ -1,4 +1,5 @@
 ﻿using BufferWriteAndRead.Entitys;
+using Newtonsoft.Json;
 //using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -76,10 +77,30 @@ namespace BufferWriteAndRead
             //user.SByte = 1;
             user.UShort = 2342;
 
-            var buffer = user.Write();
-            var user1 = User.Read(buffer, 0);
-
+            var wathc = new Stopwatch();
+            wathc.Start();
+            for (var i = 0; i < 100000; i++)
+            {
+                var buffer = user.Write();
+                var user1 = User.Read(buffer, 0);
+              
+            }
+            wathc.Stop();
+            Console.WriteLine("json:" + wathc.ElapsedMilliseconds);
+            wathc.Reset();
+            wathc.Restart();
+            for (var i = 0; i < 100000; i++)
+            {
+                var json = JsonConvert.SerializeObject(user);
+                JsonConvert.DeserializeObject(json);
+            }
+            wathc.Stop();
+            Console.WriteLine("btye:" + wathc.ElapsedMilliseconds);
         }
+
+
+
+
 
     }
 
