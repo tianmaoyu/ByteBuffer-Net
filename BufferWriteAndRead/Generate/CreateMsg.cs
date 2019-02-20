@@ -72,7 +72,12 @@ namespace BufferWriteAndRead
             var strLength=buffer[offset];
             offset++;
             msg.Name=BitConverter.ToString(buffer, offset,strLength);
-            offset+=8;
+            offset+=strLength;
+
+         
+
+
+
             return msg;
         } 
       }

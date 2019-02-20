@@ -36,27 +36,49 @@ namespace BufferWriteAndRead.Entitys
         [ByteMember(6, ByteType.Uint16)]
         public int Id { get; set; }
 
+        [ByteMember(7, ByteType.Uint16Array)]
+        public List<int> IdList { get; set; }
 
-        //public byte[] Serialize()
-        //{
-        //    var bytes = new byte[14];
-        //    Span<byte> span = new Span<byte>(bytes);
+        
 
-        //    //BitConverter.w(UInt16);
+        public byte[] Serialize()
+        {
+           
 
-        //    return new byte[2];
-        //}
+            var bytes = new byte[14];
+            Span<byte> span = new Span<byte>(bytes);
+
+            //BitConverter.w(UInt16);
+
+            return new byte[2];
+        }
 
 
-        //public User Deserialize(ArraySegment<byte> arraySegment)
-        //{
-        //    var user = new User();
+        public User Deserialize(ArraySegment<byte> arraySegment)
+        {
+            //var offSet = 0;
+            //var buffer = new byte[20];
+            //var length = this.IdList.Count;
+            //buffer[offSet] = (byte)length;
+            //offSet++;
+            //foreach (var id in IdList)
+            //{
+            //    buffer[offSet] = (byte)id;
+            //    offSet++;
+            //}
 
-        //    return user;
-        //}
+
+
+            var user = new User();
+
+            return user;
+        }
     }
 
    
+
+  
+
 
     public class ByteHelper
     {
