@@ -39,11 +39,8 @@ namespace BufferWriteAndRead
                     menberInfo.TypeName = property.PropertyType.Name;
                     codeClassInfo.MemberList.Add(menberInfo);
                 }
-                codeClassInfo.MemberList= codeClassInfo.MemberList.OrderBy(i => i.Order).ToList();
-                //foreach (var info in codeClassInfo.MemberList.OrderBy(i => i.Order))
-                //{
-                //    Console.WriteLine($"name:{info.Name} type:{info.ByteType.ToString()} order:{info.Order}");
-                //}
+                codeClassInfo.MemberList = codeClassInfo.MemberList.OrderBy(i => i.Order).ToList();
+
 
                 var nameSpaces = codeClassInfo.NameSpace.Split(".");
                 var inerPath = string.Empty;
@@ -51,7 +48,7 @@ namespace BufferWriteAndRead
                 {
                     inerPath += "\\" + nameSpaces[i];
                 }
-               
+
                 var fileDir = projectPath + inerPath + @"\Generate\";
                 if (!Directory.Exists(fileDir)) Directory.CreateDirectory(fileDir);
                 var fileName = projectPath + inerPath + @"\Generate\" + codeClassInfo.ClassName + ".cs";
@@ -107,7 +104,7 @@ namespace {1}
                     case ByteType.Int8:
                         str += CodeWriteHelper.GetInt8(info);
                         break;
-                    case ByteType.Uint8:
+                    case ByteType.UInt8:
                         str += CodeWriteHelper.GetUInt8(info);
                         break;
                     case ByteType.Int16:
@@ -131,6 +128,34 @@ namespace {1}
                     case ByteType.String:
                         str += CodeWriteHelper.GetString(info);
                         break;
+                    // array
+                    case ByteType.Int8Array:
+                        str += CodeWriteHelper.GetArrayInt8(info);
+                        break;
+                    case ByteType.UInt8Array:
+                        str += CodeWriteHelper.GetArrayUInt8(info);
+                        break;
+                    case ByteType.Int16Array:
+                        str += CodeWriteHelper.GetArrayInt16(info);
+                        break;
+                    case ByteType.Uint16Array:
+                        str += CodeWriteHelper.GetArrayUInt16(info);
+                        break;
+                    case ByteType.Int32Array:
+                        str += CodeWriteHelper.GetArrayInt32(info);
+                        break;
+                    case ByteType.Uint32Array:
+                        str += CodeWriteHelper.GetArrayUInt32(info);
+                        break;
+                    case ByteType.Float32Array:
+                        str += CodeWriteHelper.GetArrayFloat32(info);
+                        break;
+                    case ByteType.Float64Array:
+                        str += CodeWriteHelper.GetArrayFloat64(info);
+                        break;
+                    case ByteType.StringArray:
+                        str += CodeWriteHelper.GetArrayString(info);
+                        break;
                 }
             }
             str += CodeWriteHelper.Get_Method_Foot();
@@ -148,7 +173,7 @@ namespace {1}
                     case ByteType.Int8:
                         str += CodeReadHelper.GetInt8(info);
                         break;
-                    case ByteType.Uint8:
+                    case ByteType.UInt8:
                         str += CodeReadHelper.GetUInt8(info);
                         break;
                     case ByteType.Int16:
@@ -171,6 +196,34 @@ namespace {1}
                         break;
                     case ByteType.String:
                         str += CodeReadHelper.GetString(info.Name);
+                        break;
+                    //arrary
+                    case ByteType.Int8Array:
+                        str += CodeReadHelper.GetArrayInt8(info);
+                        break;
+                    case ByteType.UInt8Array:
+                        str += CodeReadHelper.GetArrayUInt8(info);
+                        break;
+                    case ByteType.Int16Array:
+                        str += CodeReadHelper.GetArrayInt16(info.Name);
+                        break;
+                    case ByteType.Uint16Array:
+                        str += CodeReadHelper.GetArrayUInt16(info.Name);
+                        break;
+                    case ByteType.Int32Array:
+                        str += CodeReadHelper.GetArrayInt32(info.Name);
+                        break;
+                    case ByteType.Uint32Array:
+                        str += CodeReadHelper.GetArrayUInt32(info.Name);
+                        break;
+                    case ByteType.Float32Array:
+                        str += CodeReadHelper.GetArrayFloat32(info.Name);
+                        break;
+                    case ByteType.Float64Array:
+                        str += CodeReadHelper.GetArrayFloat64(info.Name);
+                        break;
+                    case ByteType.StringArray:
+                        str += CodeReadHelper.GetArrayString(info.Name);
                         break;
                 }
             }
@@ -364,7 +417,19 @@ namespace {1}
 
 
         #region array
-
+        public static string GetArrayBool(CodeMemberInfo memberInfo)
+        {
+            var str = string.Format(@"  
+            var count{0} = this.{0} == null ? 0 : this.{0}.Count;
+            buffer[offset] = (byte)count{0};
+            offset++;
+            foreach (var item in this.{0})
+            {{
+                buffer[offset] = (byte)item;
+                offset++;
+            }}", memberInfo.Name);
+            return str;
+        }
         public static string GetArrayInt8(CodeMemberInfo memberInfo)
         {
             //var length = this.{ 0} == null ? 0 : this.{0}.Count;
@@ -377,27 +442,27 @@ namespace {1}
             //}
 
             var str = string.Format(@"  
-            var length = this.{0} == null ? 0 : this.{0}.Count;
-            buffer[offset] = (byte)length;
+            var count{0} = this.{0} == null ? 0 : this.{0}.Count;
+            buffer[offset] = (byte)count{0};
             offset++;
             foreach (var id in this.{0})
-            {
+            {{
                 buffer[offset] = (byte)id;
                 offset++;
-            }", memberInfo.Name);
+            }}", memberInfo.Name);
             return str;
         }
         public static string GetArrayUInt8(CodeMemberInfo memberInfo)
         {
             var str = string.Format(@"  
-            var length = this.{0} == null ? 0 : this.{0}.Count;
-            buffer[offset] = (byte)length;
+            var count{0} = this.{0} == null ? 0 : this.{0}.Count;
+            buffer[offset] = (byte)count{0};
             offset++;
             foreach (var id in this.{0})
-            {
+            {{
                 buffer[offset] = (byte)id;
                 offset++;
-            }", memberInfo.Name);
+            }}", memberInfo.Name);
             return str;
         }
         public static string GetArrayInt16(CodeMemberInfo memberInfo)
@@ -415,8 +480,8 @@ namespace {1}
             //}
 
             var str = string.Format(@"  
-            var count = this.{0} == null ? 0 : this.{0}.Count;
-            buffer[offset] = (byte)count;
+            var count{0} = this.{0} == null ? 0 : this.{0}.Count;
+            buffer[offset] = (byte)count{0};
             offset++;
             foreach (var item in this.{0})
             {{
@@ -438,8 +503,8 @@ namespace {1}
             //}
 
             var str = string.Format(@"  
-            var count = this.{0} == null ? 0 : this.{0}.Count;
-            buffer[offset] = (byte)count;
+            var count{0} = this.{0} == null ? 0 : this.{0}.Count;
+            buffer[offset] = (byte)count{0};
             offset++;
             foreach (var item in this.{0})
             {{
@@ -460,8 +525,8 @@ namespace {1}
         public static string GetArrayInt32(CodeMemberInfo memberInfo)
         {
             var str = string.Format(@"  
-            var count = this.{0} == null ? 0 : this.{0}.Count;
-            buffer[offset] = (byte)count;
+            var count{0} = this.{0} == null ? 0 : this.{0}.Count;
+            buffer[offset] = (byte)count{0};
             offset++;
             foreach (var item in this.{0})
             {{
@@ -482,8 +547,8 @@ namespace {1}
             //}
 
             var str = string.Format(@"  
-            var count = this.{0} == null ? 0 : this.{0}.Count;
-            buffer[offset] = (byte)count;
+            var count{0} = this.{0} == null ? 0 : this.{0}.Count;
+            buffer[offset] = (byte)count{0};
             offset++;
             foreach (var item in this.{0})
             {{
@@ -494,13 +559,13 @@ namespace {1}
                 }}
             }}", memberInfo.Name);
             return str;
-           
+
         }
         public static string GetArrayFloat32(CodeMemberInfo memberInfo)
         {
             var str = string.Format(@"  
-            var count = this.{0} == null ? 0 : this.{0}.Count;
-            buffer[offset] = (byte)count;
+            var count{0} = this.{0} == null ? 0 : this.{0}.Count;
+            buffer[offset] = (byte)count{0};
             offset++;
             foreach (var item in this.{0})
             {{
@@ -515,8 +580,8 @@ namespace {1}
         public static string GetArrayFloat64(CodeMemberInfo memberInfo)
         {
             var str = string.Format(@"  
-            var count = this.{0} == null ? 0 : this.{0}.Count;
-            buffer[offset] = (byte)count;
+            var count{0} = this.{0} == null ? 0 : this.{0}.Count;
+            buffer[offset] = (byte)count{0};
             offset++;
             foreach (var item in this.{0})
             {{
@@ -531,8 +596,8 @@ namespace {1}
         public static string GetArrayString(CodeMemberInfo memberInfo)
         {
             var str = string.Format(@"  
-            var count = this.{0} == null ? 0 : this.{0}.Count;
-            buffer[offset] = (byte)count;
+            var count{0} = this.{0} == null ? 0 : this.{0}.Count;
+            buffer[offset] = (byte)count{0};
             offset++;
             foreach (var item in this.{0})
             {{
@@ -574,23 +639,21 @@ namespace {1}
         }
 
 
-        public static string GetInt8(CodeMemberInfo info)
+
+
+        public static string GetBool(CodeMemberInfo info)
         {
-            if (info.TypeName.Equals("Boolean"))
-            {
-                var str = string.Format(@"
+            var str = string.Format(@"
             msg.{0}=buffer[offset]==1;
             offset++; ", info.Name, info.TypeName);
-                return str;
-            }
-            else
-            {
-                var str = string.Format(@"
+            return str;
+        }
+        public static string GetInt8(CodeMemberInfo info)
+        {
+            var str = string.Format(@"
             msg.{0}=({1})buffer[offset];
             offset++; ", info.Name, info.TypeName);
-                return str;
-            }
-
+            return str;
         }
         public static string GetUInt8(CodeMemberInfo info)
         {
@@ -659,84 +722,84 @@ namespace {1}
         }
 
         #region Array
-        public static string GetArrayInt8(CodeMemberInfo info)
+
+        public static string GetArrayBool(CodeMemberInfo info)
         {
-            if (info.TypeName.Equals("Boolean"))
-            {
-                var str = string.Format(@"
-            var count = buffer[offset];
+            var str = string.Format(@"
+            var count{0} = buffer[offset];
             offset++;
-            var list = new List<bool>();
-            for (var i = 0; i < count; i++)
-            {
+            var list{0} = new List<bool>();
+            for (var i = 0; i < count{0}; i++)
+            {{
                 var item = buffer[offset]==1;
                 offset++;
-                list.Add(item);
-            }
-            msg.{0} = list; ", info.Name, info.TypeName);
-                return str;
-            }
-            else
-            {
-                var str = string.Format(@"
-            var count = buffer[offset];
-            offset++;
-            var list = new List<byte>();
-            for (var i = 0; i < count; i++)
-            {
-                var item = buffer[offset];
-                offset++;
-                list.Add(item);
-            }
-            msg.{0} = list; ", info.Name, info.TypeName);
-                return str;
-            }
+                list{0}.Add(item);
+            }}
+            msg.{0} = list{0}; ", info.Name, info.TypeName);
+            return str;
 
         }
+
+        public static string GetArrayInt8(CodeMemberInfo info)
+        {
+            var str = string.Format(@"
+            var count{0} = buffer[offset];
+            offset++;
+            var list{0} = new List<byte>();
+            for (var i = 0; i < count{0}; i++)
+            {{
+                var item = buffer[offset];
+                offset++;
+                list{0}.Add(item);
+            }}
+            msg.{0} = list{0}; ", info.Name, info.TypeName);
+            return str;
+        }
+
         public static string GetArrayUInt8(CodeMemberInfo info)
         {
             var str = string.Format(@"
-            var count = buffer[offset];
+            var count{0} = buffer[offset];
             offset++;
-            var list = new List<bool>();
-            for (var i = 0; i < count; i++)
-            {
-                var item = ({1})buffer[offset];
+            var list{0} = new List<byte>();
+            for (var i = 0; i < count{0}; i++)
+            {{
+                var item = buffer[offset];
                 offset++;
-                list.Add(item);
-            }
-            msg.{0} = list;", info.Name, info.TypeName);
+                list{0}.Add(item);
+            }}
+            msg.{0} = list{0};", info.Name);
             return str;
         }
         public static string GetArrayInt16(string propertName)
         {
 
             var str = string.Format(@"
-            var count = buffer[offset];
+            var count{0} = buffer[offset];
             offset++;
-            var list = new List<Int16>();
-            for (var i = 0; i < count; i++)
-            {
+            var list{0} = new List<int>();
+            for (var i = 0; i < count{0}; i++)
+            {{
                 var item = BitConverter.ToInt16(buffer, offset);
                 offset += 2;
-                list.Add(item);
-            }
-            msg.{0} = list;", propertName);
+                list{0}.Add(item);
+            }}
+            msg.{0} = list{0};", propertName);
             return str;
         }
         public static string GetArrayUInt16(string propertName)
         {
             var str = string.Format(@"
-            var count = buffer[offset];
+            var count{0} = buffer[offset];
             offset++;
-            var list = new List<UInt16>();
-            for (var i = 0; i < count; i++)
-            {
+            var list{0} = new List<int>();
+            for (var i = 0; i < count{0}; i++)
+            {{
                 var item = BitConverter.ToUInt16(buffer, offset);
                 offset += 2;
-                list.Add(item);
-            }
-            msg.{0} = list;", propertName);
+                list{0}.Add(item);
+            }}
+            msg.{0} = list{0};", propertName);
             return str;
 
             //var str = string.Format(@"
@@ -748,16 +811,16 @@ namespace {1}
         {
 
             var str = string.Format(@"
-            var count = buffer[offset];
+            var count{0} = buffer[offset];
             offset++;
-            var list = new List<int>();
-            for (var i = 0; i < count; i++)
-            {
+            var list{0} = new List<int>();
+            for (var i = 0; i < count{0}; i++)
+            {{
                 var item = BitConverter.ToInt32(buffer, offset);
                 offset += 4;
-                list.Add(item);
-            }
-            msg.{0} = list;", propertName);
+                list{0}.Add(item);
+            }}
+            msg.{0} = list{0};", propertName);
             return str;
 
             //var str = string.Format(@"
@@ -768,16 +831,16 @@ namespace {1}
         public static string GetArrayUInt32(string propertName)
         {
             var str = string.Format(@"
-            var count = buffer[offset];
+            var count{0} = buffer[offset];
             offset++;
-            var list = new List<UInt32>();
-            for (var i = 0; i < count; i++)
-            {
+            var list{0} = new List<UInt32>();
+            for (var i = 0; i < count{0}; i++)
+            {{
                 var item = BitConverter.ToUInt32(buffer, offset);
                 offset += 4;
-                list.Add(item);
-            }
-            msg.{0} = list;", propertName);
+                list{0}.Add(item);
+            }}
+            msg.{0} = list{0};", propertName);
             return str;
 
             //var str = string.Format(@"
@@ -788,16 +851,16 @@ namespace {1}
         public static string GetArrayFloat32(string propertName)
         {
             var str = string.Format(@"
-            var count = buffer[offset];
+            var count{0} = buffer[offset];
             offset++;
-            var list = new List<float>();
-            for (var i = 0; i < count; i++)
-            {
+            var list{0} = new List<float>();
+            for (var i = 0; i < count{0}; i++)
+            {{
                 var item = BitConverter.ToSingle(buffer, offset);
                 offset += 4;
-                list.Add(item);
-            }
-            msg.{0} = list;", propertName);
+                list{0}.Add(item);
+            }}
+            msg.{0} = list{0};", propertName);
             return str;
 
             //var str = string.Format(@"
@@ -809,16 +872,16 @@ namespace {1}
         {
 
             var str = string.Format(@"
-            var count = buffer[offset];
+            var count{0} = buffer[offset];
             offset++;
-            var list = new List<double>();
-            for (var i = 0; i < count; i++)
-            {
+            var list{0} = new List<double>();
+            for (var i = 0; i < count{0}; i++)
+            {{
                 var item = BitConverter.ToDouble(buffer, offset);
                 offset += 8;
-                list.Add(item);
-            }
-            msg.{0} = list;", propertName);
+                list{0}.Add(item);
+            }}
+            msg.{0} = list{0};", propertName);
             return str;
 
             //var str = string.Format(@"
@@ -830,18 +893,18 @@ namespace {1}
         {
 
             var str = string.Format(@"
-            var count = buffer[offset];
+            var count{0} = buffer[offset];
             offset++;
-            var list = new List<string>();
-            for (var i = 0; i < count; i++)
-            {
+            var list{0} = new List<string>();
+            for (var i = 0; i < count{0}; i++)
+            {{
                 var strLength=buffer[offset];
                 offset++;
-                item=BitConverter.ToString(buffer, offset,strLength);
+                var item=BitConverter.ToString(buffer, offset,strLength);
                 offset+=strLength;
-                list.Add(item);
-            }
-            msg.{0} = list;", propertName);
+                list{0}.Add(item);
+            }}
+            msg.{0} = list{0};", propertName);
             return str;
 
             //var str = string.Format(@"

@@ -36,6 +36,8 @@ namespace BufferWriteAndRead
     /// </summary>
     public enum ByteType
     {
+
+        Bool=0,
         /// <summary>
         /// byte 无符号 8 位整数  0 到 255
         /// </summary>
@@ -44,7 +46,7 @@ namespace BufferWriteAndRead
         /// <summary>
         /// sbyte :-128 到 127  有符号 8 位整数
         /// </summary>
-        Uint8 = 2,
+        UInt8 = 2,
 
         /// <summary>
         /// short 有符号 16 位整数  -32,768 到 32,767
@@ -77,24 +79,25 @@ namespace BufferWriteAndRead
         String = 9,
         Object = 10,
 
+        BoolArray=19,
         //数组
-        Int8Array = 10,
+        Int8Array = 20,
 
-        UInt8Array = 11,
+        UInt8Array = 21,
 
-        Int16Array = 13,
+        Int16Array = 23,
 
-        Uint16Array = 14,
+        Uint16Array = 24,
 
-        Int32Array = 15,
+        Int32Array = 25,
 
-        Uint32Array = 16,
+        Uint32Array = 26,
 
-        Float32Array = 17,
+        Float32Array = 27,
 
-        Float64Array = 18,
+        Float64Array = 28,
 
-        StringArray = 19,
+        StringArray = 29,
 
         ObjectArray = 20,
     }

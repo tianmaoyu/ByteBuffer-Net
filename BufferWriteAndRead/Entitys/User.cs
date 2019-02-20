@@ -16,7 +16,7 @@ namespace BufferWriteAndRead.Entitys
         [ByteMember(2, ByteType.Int8)]
         public char Char { get; set; }
 
-        [ByteMember(3, ByteType.Int8)]
+        [ByteMember(3, ByteType.Bool)]
         public bool Bool { get; set; }
 
         [ByteMember(4, ByteType.Int16)]
@@ -39,7 +39,18 @@ namespace BufferWriteAndRead.Entitys
         [ByteMember(7, ByteType.Uint16Array)]
         public List<int> IdList { get; set; }
 
-        
+        [ByteMember(8, ByteType.BoolArray)]
+        public List<bool> boolList { get; set; }
+
+        [ByteMember(8, ByteType.Int32Array)]
+        public List<int> IntList { get; set; }
+
+        [ByteMember(8, ByteType.Float32Array)]
+        public List<float> floatList { get; set; }
+
+
+        [ByteMember(8, ByteType.StringArray)]
+        public List<string> StringList { get; set; }
 
         public byte[] Serialize()
         {

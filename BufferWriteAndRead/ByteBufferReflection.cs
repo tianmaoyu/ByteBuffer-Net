@@ -45,7 +45,7 @@ namespace BufferWriteAndRead
         [ByteMember(1,ByteType.Uint16)]
         public UInt16 UInt16 { get; set; }
 
-        [ByteMember(2, ByteType.Uint8)]
+        [ByteMember(2, ByteType.UInt8)]
         public char Char { get; set; }
 
         [ByteMember(3, ByteType.Int8)]
@@ -61,7 +61,7 @@ namespace BufferWriteAndRead
         public byte Byte { get; set; }
 
 
-        [ByteMember(7, ByteType.Uint8)]
+        [ByteMember(7, ByteType.UInt8)]
         public sbyte SByte { get; set; }
 
         [ByteMember(8, ByteType.Uint16)]
