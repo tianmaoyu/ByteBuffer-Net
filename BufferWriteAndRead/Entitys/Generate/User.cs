@@ -33,7 +33,24 @@ namespace BufferWriteAndRead.Entitys
             {
                 buffer[offset] = _byte;
                 offset += 1;
-            }   
+            }
+
+            //对象
+            if (this.Role == null)
+            {
+                buffer[offset] = 0;
+                offset += 1;
+            }
+            else
+            {
+               var _buffer= this.Role.Write();
+               buffer[offset] =(byte)_buffer.Length;
+               buffer.Concat(_buffer);
+               offset += _buffer.Length;
+            }
+           
+
+
             var countIdList = this.IdList == null ? 0 : this.IdList.Count;
             buffer[offset] = (byte)countIdList;
             offset++;
@@ -99,10 +116,36 @@ namespace BufferWriteAndRead.Entitys
                     buffer[offset] = _byte;
                     offset += 1;
                  }
-            }}
-            //var _buffer=new Buffer()
+            }}  
+
+
+
+            //对象数组
+            var countRoleList = this.RoleList == null ? 0 : this.RoleList.Count;
+            buffer[offset] = (byte)countRoleList;
+            offset++;
+            if (countRoleList > 0)  
+            { 
+                foreach (var item in this.RoleList)
+                {
+                    //对象
+                    if (this.Role == null)
+                    {
+                        buffer[offset] = 0;
+                        offset += 1;
+                    }
+                    else
+                    {
+                        var _buffer = item.Write();
+                        buffer[offset] = (byte)_buffer.Length;
+                        buffer.Concat(_buffer);
+                        offset += _buffer.Length;
+                    }
+                }
+            }
+
+
             return new ArraySegment<byte>(buffer, 0, offset).ToArray();
-            //return buffer.CopyTo();
         }
         public static User Read(byte[] buffer,int offset)
         {
@@ -117,6 +160,24 @@ namespace BufferWriteAndRead.Entitys
             offset+=2;
             msg.Id=BitConverter.ToUInt16(buffer, offset);
             offset+=2;
+
+            //对象
+            var roleIsNull = buffer[offset];
+            offset++;
+            if (roleIsNull == 0)
+            {
+                msg.Role = null;
+            }
+            else
+            {
+                var roleLength = buffer[offset];
+                offset++;
+                var _buffer = new ArraySegment<byte>(buffer, offset, roleLength).ToArray();
+                msg.Role = Role.Read(_buffer, 0);
+                offset += roleLength;
+            }
+
+
             var countIdList = buffer[offset];
             offset++;
             var listIdList = new List<int>();
@@ -169,6 +230,30 @@ namespace BufferWriteAndRead.Entitys
                 listStringList.Add(item);
             }
             msg.StringList = listStringList;
+
+            // 对象数组
+            var countRoleList = buffer[offset];
+            offset++;
+            var listRoleList = new List<Role>();
+            for (var i = 0; i < countRoleList; i++)
+            {
+
+                var _roleIsNull = buffer[offset];
+                offset++;
+                if (_roleIsNull == 0) 
+                {
+                    listRoleList.Add(null);
+                }
+                else
+                {
+                    var roleLength = buffer[offset];
+                    offset++;
+                    var _buffer = new ArraySegment<byte>(buffer, offset, roleLength).ToArray();
+                    listRoleList.Add(Role.Read(_buffer, 0));
+                    offset += roleLength;
+                }
+            }
+            msg.RoleList = listRoleList; 
             return msg;
         } 
       }

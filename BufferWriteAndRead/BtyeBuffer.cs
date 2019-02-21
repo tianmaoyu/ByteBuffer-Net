@@ -99,7 +99,7 @@ namespace BufferWriteAndRead
 
         StringArray = 29,
 
-        ObjectArray = 20,
+        ObjectArray = 30,
     }
 
 }

@@ -52,6 +52,12 @@ namespace BufferWriteAndRead.Entitys
         [ByteMember(8, ByteType.StringArray)]
         public List<string> StringList { get; set; }
 
+        [ByteMember(9, ByteType.Object)]
+        public Role Role { get; set; }
+
+        [ByteMember(10, ByteType.ObjectArray)]
+        public List<Role> RoleList { get; set; }
+
         public byte[] Serialize()
         {
            
@@ -86,7 +92,14 @@ namespace BufferWriteAndRead.Entitys
         }
     }
 
-   
+    [BtyeContract]
+    public partial class Role
+    {
+        [ByteMember(1, ByteType.Int16)]
+        public int RoleId { get; set; }
+        [ByteMember(2, ByteType.String)]
+        public string RoleName { get; set; }
+    }
 
   
 

@@ -128,6 +128,11 @@ namespace {1}
                     case ByteType.String:
                         str += CodeWriteHelper.GetString(info);
                         break;
+
+                    case ByteType.Object:
+                        str += CodeWriteHelper.GetObject(info);
+                        break;
+
                     // array
                     case ByteType.BoolArray:
                         str += CodeWriteHelper.GetArrayBool(info);
@@ -158,6 +163,9 @@ namespace {1}
                         break;
                     case ByteType.StringArray:
                         str += CodeWriteHelper.GetArrayString(info);
+                        break;
+                    case ByteType.ObjectArray:
+                        str += CodeWriteHelper.GetArrayObject(info);
                         break;
                 }
             }
@@ -200,6 +208,10 @@ namespace {1}
                     case ByteType.String:
                         str += CodeReadHelper.GetString(info.Name);
                         break;
+                    case ByteType.Object:
+                        str += CodeReadHelper.GetObject(info);
+                        break;
+
                     //arrary
                     case ByteType.BoolArray:
                         str += CodeReadHelper.GetArrayBool(info);
@@ -230,6 +242,9 @@ namespace {1}
                         break;
                     case ByteType.StringArray:
                         str += CodeReadHelper.GetArrayString(info.Name);
+                        break;
+                    case ByteType.ObjectArray:
+                        str += CodeReadHelper.GetArrayObject(info);
                         break;
                 }
             }
@@ -403,7 +418,7 @@ namespace {1}
         public static string GetString(CodeMemberInfo memberInfo)
         {
             var str = string.Format(@"
-            var nameBytes = System.Text.Encoding.UTF8.GetBytes(this.{0});
+            var nameBytes = System.Text.Encoding.Unicode.GetBytes(this.{0});
             buffer[offset] = (byte)nameBytes.Length;
             offset += 1;
             foreach (var _byte in nameBytes)
@@ -642,6 +657,30 @@ namespace {1}
             }}}}", memberInfo.Name);
             return str;
         }
+
+        public static string GetArrayObject(CodeMemberInfo memberInfo)
+        {
+
+
+            var str = string.Format(@"  
+            var count{0} = this.{0} == null ? 0 : this.{0}.Count;
+            buffer[offset] = (byte)count{0};
+            offset++;
+            if (count{0} > 0)  
+            {{ 
+            foreach (var item in this.{0})
+            {{
+                 var nameBytes = System.Text.Encoding.Unicode.GetBytes(item);
+                 buffer[offset] = (byte)nameBytes.Length;
+                 offset += 1;
+                 foreach (var _byte in nameBytes)
+                 {{
+                    buffer[offset] = _byte;
+                    offset += 1;
+                 }}
+            }}}}", memberInfo.Name);
+            return str;
+        }
         #endregion
 
     }
@@ -746,7 +785,7 @@ namespace {1}
             offset+=strLength;", propertName);
             return str;
         }
-        public static string GetObject()
+        public static string GetObject(CodeMemberInfo info)
         {
             return string.Empty;
         }
@@ -944,6 +983,13 @@ namespace {1}
             //offset+=strLength;", propertName);
             //return str;
         }
+
+
+        public static string GetArrayObject(CodeMemberInfo memberInfo)
+        {
+            return string.Empty;
+        }
+
         #endregion
 
     }

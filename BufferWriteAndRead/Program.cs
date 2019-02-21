@@ -32,7 +32,7 @@ namespace BufferWriteAndRead
             var str1 = System.Text.Encoding.Unicode.GetString(bytes);
             var str =  BitConverter.ToString(bytes);
 
-            TestUser();
+            //TestUser();
             CodeGenerate.Run();
             //ByteBufferReflection.test();
 
@@ -77,25 +77,30 @@ namespace BufferWriteAndRead
             //user.SByte = 1;
             user.UShort = 2342;
 
-            var wathc = new Stopwatch();
-            wathc.Start();
-            for (var i = 0; i < 100000; i++)
-            {
-                var buffer = user.Write();
-                var user1 = User.Read(buffer, 0);
+            //性能对比
+            //var wathc = new Stopwatch();
+            //wathc.Start();
+            //byte[] buffer=null;
+            //for (var i = 0; i < 100000; i++)
+            //{
+            //    buffer = user.Write();
+            //    var user1 = User.Read(buffer, 0);
               
-            }
-            wathc.Stop();
-            Console.WriteLine("json:" + wathc.ElapsedMilliseconds);
-            wathc.Reset();
-            wathc.Restart();
-            for (var i = 0; i < 100000; i++)
-            {
-                var json = JsonConvert.SerializeObject(user);
-                JsonConvert.DeserializeObject(json);
-            }
-            wathc.Stop();
-            Console.WriteLine("btye:" + wathc.ElapsedMilliseconds);
+            //}
+            //wathc.Stop();
+            //Console.WriteLine(buffer.Length);
+            //Console.WriteLine("json:" + wathc.ElapsedMilliseconds);
+            //wathc.Reset();
+            //wathc.Restart();
+            //var json = string.Empty;
+            //for (var i = 0; i < 100000; i++)
+            //{
+            //    json = JsonConvert.SerializeObject(user);
+            //    JsonConvert.DeserializeObject(json);
+            //}
+            //wathc.Stop();
+            //Console.WriteLine(Encoding.Unicode.GetBytes(json).Length);
+            //Console.WriteLine("btye:" + wathc.ElapsedMilliseconds);
         }
 
 
