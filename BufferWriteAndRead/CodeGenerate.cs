@@ -36,7 +36,15 @@ namespace BufferWriteAndRead
                     menberInfo.Name = property.Name;
                     menberInfo.ByteType = byteMember.ByteType;
                     menberInfo.Order = byteMember.Order;
-                    menberInfo.TypeName = property.PropertyType.Name;
+                    if (byteMember.TypeName == null)
+                    {
+                        menberInfo.TypeName = property.PropertyType.Name;
+                    }
+                    else
+                    {
+                        menberInfo.TypeName = byteMember.TypeName;
+                    }
+                    
                     codeClassInfo.MemberList.Add(menberInfo);
                 }
                 codeClassInfo.MemberList = codeClassInfo.MemberList.OrderBy(i => i.Order).ToList();
@@ -432,7 +440,33 @@ namespace {1}
 
         public static string GetObject(CodeMemberInfo memberInfo)
         {
-            return string.Empty;
+            //if (this.{0} == null)
+            //{
+            //    buffer[offset] = 0;
+            //    offset += 1;
+            //}
+            //else
+            //{
+            //    var _buffer = this.{0}.Write();
+            //    buffer[offset] = (byte)_buffer.Length;
+            //    buffer.Concat(_buffer);
+            //    offset += _buffer.Length;
+            //}
+
+            var str = string.Format(@"
+            if (this.{0} == null)
+            {{
+                buffer[offset] = 0;
+                offset += 1;
+            }}
+            else
+            {{
+                var _buffer = this.{0}.Write();
+                buffer[offset] = (byte)_buffer.Length;
+                buffer.Concat(_buffer);
+                offset += _buffer.Length;
+            }}", memberInfo.Name);
+            return str;
         }
 
 
@@ -660,25 +694,51 @@ namespace {1}
 
         public static string GetArrayObject(CodeMemberInfo memberInfo)
         {
-
+            //对象数组
+            //var count{0} = this.{0} == null ? 0 : this.{0}.Count;
+            //buffer[offset] = (byte)count{0};
+            //offset++;
+            //if (count{0} > 0)
+            //{
+            //    foreach (var item in this.{0})
+            //    {
+            //        if (item == null)
+            //        {
+            //            buffer[offset] = 0;
+            //            offset += 1;
+            //        }
+            //        else
+            //        {
+            //            var _buffer = item.Write();
+            //            buffer[offset] = (byte)_buffer.Length;
+            //            buffer.Concat(_buffer);
+            //            offset += _buffer.Length;
+            //        }
+            //    }
+            //}
 
             var str = string.Format(@"  
             var count{0} = this.{0} == null ? 0 : this.{0}.Count;
             buffer[offset] = (byte)count{0};
             offset++;
-            if (count{0} > 0)  
-            {{ 
-            foreach (var item in this.{0})
+            if (count{0} > 0)
             {{
-                 var nameBytes = System.Text.Encoding.Unicode.GetBytes(item);
-                 buffer[offset] = (byte)nameBytes.Length;
-                 offset += 1;
-                 foreach (var _byte in nameBytes)
-                 {{
-                    buffer[offset] = _byte;
-                    offset += 1;
-                 }}
-            }}}}", memberInfo.Name);
+                foreach (var item in this.{0})
+                {{
+                    if (item == null)
+                    {{
+                        buffer[offset] = 0;
+                        offset += 1;
+                    }}
+                    else
+                    {{
+                        var _buffer = item.Write();
+                        buffer[offset] = (byte)_buffer.Length;
+                        buffer.Concat(_buffer);
+                        offset += _buffer.Length;
+                    }}
+                }}
+            }}", memberInfo.Name);
             return str;
         }
         #endregion
@@ -787,7 +847,22 @@ namespace {1}
         }
         public static string GetObject(CodeMemberInfo info)
         {
-            return string.Empty;
+            var str = string.Format(@"
+            var {0}IsNull = buffer[offset];
+            offset++;
+            if ({0}IsNull == 0)
+            {{
+                msg.{0} = null;
+            }}
+            else
+            {{
+                var roleLength = buffer[offset];
+                offset++;
+                var _buffer = new ArraySegment<byte>(buffer, offset, roleLength).ToArray();
+                msg.{0} = {1}.Read(_buffer, 0);
+                offset += roleLength;
+            }}", info.Name,info.TypeName);
+            return str;
         }
 
         #region Array
@@ -987,7 +1062,52 @@ namespace {1}
 
         public static string GetArrayObject(CodeMemberInfo memberInfo)
         {
-            return string.Empty;
+            //var count{0} = buffer[offset];
+            //offset++;
+            //var list{1}List = new List<{1}>();
+            //for (var i = 0; i < count{0}; i++)
+            //{
+            //    var {1}IsNull = buffer[offset];
+            //    offset++;
+            //    if ({1}IsNull == 0)
+            //    {
+            //        list{1}List.Add(null);
+            //    }
+            //    else
+            //    {
+            //        var {0}Length = buffer[offset];
+            //        offset++;
+            //        var _buffer = new ArraySegment<byte>(buffer, offset, {0}Length).ToArray();
+            //        list{1}List.Add({0}.Read(_buffer, 0));
+            //        offset += {0}Length;
+            //    }
+            //}
+            //msg.RoleList = list{1}List;
+
+            var str = string.Format(@"
+            var count{0} = buffer[offset];
+            offset++;
+            var list{1}List = new List<{1}>();
+            for (var i = 0; i < count{0}; i++)
+            {{
+                var _{1}IsNull = buffer[offset];
+                offset++;
+                if (_{1}IsNull == 0)
+                {{
+                    list{1}List.Add(null);
+                }}
+                else
+                {{
+                    var {0}Length = buffer[offset];
+                    offset++;
+                    var _buffer = new ArraySegment<byte>(buffer, offset, {0}Length).ToArray();
+                    list{1}List.Add({1}.Read(_buffer, 0));
+                    offset += {0}Length;
+                }}
+            }}
+            msg.{0} = list{1}List;", memberInfo.Name, memberInfo.TypeName);
+
+            return str;
         }
 
         #endregion

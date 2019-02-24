@@ -55,7 +55,7 @@ namespace BufferWriteAndRead.Entitys
         [ByteMember(9, ByteType.Object)]
         public Role Role { get; set; }
 
-        [ByteMember(10, ByteType.ObjectArray)]
+        [ByteMember(10, ByteType.ObjectArray, "Role")]
         public List<Role> RoleList { get; set; }
 
         public byte[] Serialize()

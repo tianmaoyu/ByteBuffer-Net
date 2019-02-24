@@ -31,10 +31,10 @@ namespace BufferWriteAndRead
             }
             var str1 = System.Text.Encoding.Unicode.GetString(bytes);
             var str =  BitConverter.ToString(bytes);
-
+            //ByteBufferReflection.test();
             //TestUser();
             CodeGenerate.Run();
-            //ByteBufferReflection.test();
+          
 
             return;
            

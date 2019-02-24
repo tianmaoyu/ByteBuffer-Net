@@ -23,10 +23,13 @@ namespace BufferWriteAndRead
         public int Order { get; set; }
 
         public ByteType ByteType { get; set; }
-        public ByteMember(int order, ByteType tyteType)
+
+        public string TypeName { get; set; }
+        public ByteMember(int order, ByteType tyteType,string typeName=null)
         {
             this.Order = order;
             this.ByteType = tyteType;
+            this.TypeName = typeName;
         }
     }
 
