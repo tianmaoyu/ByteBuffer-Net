@@ -440,17 +440,21 @@ namespace {1}
 
         public static string GetObject(CodeMemberInfo memberInfo)
         {
-            //if (this.{0} == null)
+            //if (this.Role == null)
             //{
             //    buffer[offset] = 0;
             //    offset += 1;
             //}
             //else
             //{
-            //    var _buffer = this.{0}.Write();
+            //    var _buffer = this.Role.Write();
             //    buffer[offset] = (byte)_buffer.Length;
-            //    buffer.Concat(_buffer);
-            //    offset += _buffer.Length;
+            //    offset++;
+            //    for (var i = 0; i < _buffer.Length; i++)
+            //    {
+            //        buffer[offset] = _buffer[i];
+            //        offset++;
+            //    }
             //}
 
             var str = string.Format(@"
@@ -463,8 +467,12 @@ namespace {1}
             {{
                 var _buffer = this.{0}.Write();
                 buffer[offset] = (byte)_buffer.Length;
-                buffer.Concat(_buffer);
-                offset += _buffer.Length;
+                offset++;
+                for (var i = 0; i < _buffer.Length; i++)
+                {{
+                    buffer[offset] = _buffer[i];
+                    offset++;
+                }}
             }}", memberInfo.Name);
             return str;
         }
@@ -694,13 +702,12 @@ namespace {1}
 
         public static string GetArrayObject(CodeMemberInfo memberInfo)
         {
-            //对象数组
-            //var count{0} = this.{0} == null ? 0 : this.{0}.Count;
-            //buffer[offset] = (byte)count{0};
+            //var countRoleList = this.RoleList == null ? 0 : this.RoleList.Count;
+            //buffer[offset] = (byte)countRoleList;
             //offset++;
-            //if (count{0} > 0)
+            //if (countRoleList > 0)
             //{
-            //    foreach (var item in this.{0})
+            //    foreach (var item in this.RoleList)
             //    {
             //        if (item == null)
             //        {
@@ -711,8 +718,12 @@ namespace {1}
             //        {
             //            var _buffer = item.Write();
             //            buffer[offset] = (byte)_buffer.Length;
-            //            buffer.Concat(_buffer);
-            //            offset += _buffer.Length;
+            //            offset++;
+            //            for (var i = 0; i < _buffer.Length; i++)
+            //            {
+            //                buffer[offset] = _buffer[i];
+            //                offset++;
+            //            }
             //        }
             //    }
             //}
@@ -728,14 +739,18 @@ namespace {1}
                     if (item == null)
                     {{
                         buffer[offset] = 0;
-                        offset += 1;
+                        offset ++;
                     }}
                     else
                     {{
                         var _buffer = item.Write();
                         buffer[offset] = (byte)_buffer.Length;
-                        buffer.Concat(_buffer);
-                        offset += _buffer.Length;
+                        offset++;
+                        for (var i = 0; i < _buffer.Length; i++)
+                        {{
+                            buffer[offset] = _buffer[i];
+                            offset++;
+                        }}
                     }}
                 }}
             }}", memberInfo.Name);
@@ -847,20 +862,32 @@ namespace {1}
         }
         public static string GetObject(CodeMemberInfo info)
         {
+
+            //var roleLength = buffer[offset];
+            //offset++;
+            //if (roleLength == 0)
+            //{
+            //    msg.Role = null;
+            //}
+            //else
+            //{
+            //    var _buffer = new ArraySegment<byte>(buffer, offset, roleLength).ToArray();
+            //    msg.Role = Role.Read(_buffer, 0);
+            //    offset += roleLength;
+            //}
+
             var str = string.Format(@"
-            var {0}IsNull = buffer[offset];
+            var {0}Length = buffer[offset];
             offset++;
-            if ({0}IsNull == 0)
+            if ({0}Length == 0)
             {{
                 msg.{0} = null;
             }}
             else
             {{
-                var roleLength = buffer[offset];
-                offset++;
-                var _buffer = new ArraySegment<byte>(buffer, offset, roleLength).ToArray();
+                var _buffer = new ArraySegment<byte>(buffer, offset, {0}Length).ToArray();
                 msg.{0} = {1}.Read(_buffer, 0);
-                offset += roleLength;
+                offset += {0}Length;
             }}", info.Name,info.TypeName);
             return str;
         }
@@ -1062,27 +1089,27 @@ namespace {1}
 
         public static string GetArrayObject(CodeMemberInfo memberInfo)
         {
-            //var count{0} = buffer[offset];
+            
+            //var countRoleList = buffer[offset];
             //offset++;
-            //var list{1}List = new List<{1}>();
-            //for (var i = 0; i < count{0}; i++)
+            //var listRoleList = new List<Role>();
+            //for (var i = 0; i < countRoleList; i++)
             //{
-            //    var {1}IsNull = buffer[offset];
+            //    var _roleLength = buffer[offset];
             //    offset++;
-            //    if ({1}IsNull == 0)
+            //    if (_roleLength == 0)
             //    {
-            //        list{1}List.Add(null);
+            //        listRoleList.Add(null);
             //    }
             //    else
             //    {
-            //        var {0}Length = buffer[offset];
-            //        offset++;
-            //        var _buffer = new ArraySegment<byte>(buffer, offset, {0}Length).ToArray();
-            //        list{1}List.Add({0}.Read(_buffer, 0));
-            //        offset += {0}Length;
+            //        var _buffer = new ArraySegment<byte>(buffer, offset, _roleLength).ToArray();
+            //        listRoleList.Add(Role.Read(_buffer, 0));
+            //        offset += _roleLength;
             //    }
             //}
-            //msg.RoleList = list{1}List;
+            //msg.RoleList = listRoleList;
+
 
             var str = string.Format(@"
             var count{0} = buffer[offset];
@@ -1090,19 +1117,17 @@ namespace {1}
             var list{1}List = new List<{1}>();
             for (var i = 0; i < count{0}; i++)
             {{
-                var _{1}IsNull = buffer[offset];
+                var _{1}Length = buffer[offset];
                 offset++;
-                if (_{1}IsNull == 0)
+                if (_{1}Length == 0)
                 {{
                     list{1}List.Add(null);
                 }}
                 else
                 {{
-                    var {0}Length = buffer[offset];
-                    offset++;
-                    var _buffer = new ArraySegment<byte>(buffer, offset, {0}Length).ToArray();
+                    var _buffer = new ArraySegment<byte>(buffer, offset, _{1}Length).ToArray();
                     list{1}List.Add({1}.Read(_buffer, 0));
-                    offset += {0}Length;
+                    offset += _{1}Length;
                 }}
             }}
             msg.{0} = list{1}List;", memberInfo.Name, memberInfo.TypeName);

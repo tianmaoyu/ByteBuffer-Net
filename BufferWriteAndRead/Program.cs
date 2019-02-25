@@ -63,6 +63,15 @@ namespace BufferWriteAndRead
 
         public static void TestUser()
         {
+
+            var _role = new Role();
+            _role.RoleId = 2;
+            _role.RoleName = "admin";
+
+            var roleBuffer= _role.Write();
+            var _role1 = Role.Read(roleBuffer, 0);
+
+
             var user = new User();
             user.Bool = false;
             user.boolList = new List<bool>() {false,true };
@@ -76,6 +85,23 @@ namespace BufferWriteAndRead
             user.UInt16 = 12;
             //user.SByte = 1;
             user.UShort = 2342;
+            var role = new Role();
+            role.RoleId = 2;
+            role.RoleName = "admin";
+            user.Role = role;
+            var roleList = new List<Role>();
+            var role1 = new Role();
+            role1.RoleId = 3;
+            role1.RoleName = "user1";
+            roleList.Add(role1);
+            var role2 = new Role();
+            role2.RoleId = 4;
+            role2.RoleName = "user2";
+            roleList.Add(role2);
+            user.RoleList = roleList;
+
+            //var buffer = user.Write();
+            //var user1 = User.Read(buffer, 0);
 
             //性能对比
             //var wathc = new Stopwatch();
@@ -85,7 +111,7 @@ namespace BufferWriteAndRead
             //{
             //    buffer = user.Write();
             //    var user1 = User.Read(buffer, 0);
-              
+
             //}
             //wathc.Stop();
             //Console.WriteLine(buffer.Length);
