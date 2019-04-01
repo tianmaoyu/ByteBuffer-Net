@@ -12,6 +12,8 @@ namespace BufferWriteAndRead.Entitys
         {
             var buffer = new byte[64];
             var offset = 0;  
+            buffer[offset] = Convert.ToByte(this.EntityId);
+            offset += 1;  
             foreach (var _byte in BitConverter.GetBytes(Convert.ToUInt16(this.UInt16)))
             {
                 buffer[offset] = _byte;
@@ -146,6 +148,8 @@ namespace BufferWriteAndRead.Entitys
         public static User Read(byte[] buffer,int offset)
         {
             var msg = new User();
+            msg.EntityId=(Int32)buffer[offset];
+            offset++; 
             msg.UInt16=BitConverter.ToUInt16(buffer, offset);
             offset+=2;
             msg.Char=(Char)buffer[offset];

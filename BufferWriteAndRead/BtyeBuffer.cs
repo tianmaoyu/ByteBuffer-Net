@@ -77,7 +77,7 @@ namespace BufferWriteAndRead
         /// <summary>
         /// 64 为 带 小数 类型  double
         /// </summary>
-        Float64 = 8,
+        Int64 = 8,
 
         String = 9,
         Object = 10,

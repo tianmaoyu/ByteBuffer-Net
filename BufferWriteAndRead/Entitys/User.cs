@@ -5,9 +5,9 @@ using System.Text;
 namespace BufferWriteAndRead.Entitys
 {
     [BtyeContract]
-    public partial class User
+    public partial class User:Entity
     {
-        [ByteMember(1,ByteType.Uint16)]
+        [ByteMember(1, ByteType.Uint16)]
         public UInt16 UInt16 { get; set; }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace BufferWriteAndRead.Entitys
 
         public byte[] Serialize()
         {
-           
+
 
             var bytes = new byte[14];
             Span<byte> span = new Span<byte>(bytes);
@@ -101,7 +101,12 @@ namespace BufferWriteAndRead.Entitys
         public string RoleName { get; set; }
     }
 
-  
+    public class Entity
+    {
+        [ByteMember(0,ByteType.Int8)]
+        public int EntityId { get; set; }
+    }
+
 
 
     public class ByteHelper
@@ -118,7 +123,7 @@ namespace BufferWriteAndRead.Entitys
 
         public static int bytesToInt32(byte[] src, int offset)
         {
-            
+
             int value = (src[offset] & 0xFF)
                          | ((src[offset + 1] & 0xFF) << 8)
                          | ((src[offset + 2] & 0xFF) << 16)
@@ -153,7 +158,7 @@ namespace BufferWriteAndRead.Entitys
             }
             return chars;
 
-           
+
         }
 
 

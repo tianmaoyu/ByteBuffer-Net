@@ -130,8 +130,8 @@ namespace {1}
                     case ByteType.Float32:
                         str += CodeWriteHelper.GetFloat32(info);
                         break;
-                    case ByteType.Float64:
-                        str += CodeWriteHelper.GetFloat64(info);
+                    case ByteType.Int64:
+                        str += CodeWriteHelper.GetInt64(info);
                         break;
                     case ByteType.String:
                         str += CodeWriteHelper.GetString(info);
@@ -210,8 +210,8 @@ namespace {1}
                     case ByteType.Float32:
                         str += CodeReadHelper.GetFloat32(info.Name);
                         break;
-                    case ByteType.Float64:
-                        str += CodeReadHelper.GetFloat64(info.Name);
+                    case ByteType.Int64:
+                        str += CodeReadHelper.GetInt64(info.Name);
                         break;
                     case ByteType.String:
                         str += CodeReadHelper.GetString(info.Name);
@@ -297,17 +297,15 @@ namespace {1}
     {
         private static byte[] buffer = new byte[20];
         private static int offset = 0;
-
         public static string Get_Method_Header()
         {
             var str = string.Format(@"  
-        public byte[] Write()
+        public override byte[] Write()
         {{
             var buffer = new byte[64];
             var offset = 0;");
             return str;
         }
-
         public static string Get_Method_Foot()
         {
             var str = string.Format(@"
@@ -315,7 +313,6 @@ namespace {1}
         }}");
             return str;
         }
-
         public static string GetInt8(CodeMemberInfo memberInfo)
         {
             //buffer[offset] = Convert.ToByte(memberInfo.Name); ;
@@ -369,12 +366,6 @@ namespace {1}
             }} ", memberInfo.Name);
             return str;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="memberInfo"></param>
-        /// <returns></returns>
         public static string GetInt32(CodeMemberInfo memberInfo)
         {
             var str = string.Format(@"  
@@ -413,7 +404,7 @@ namespace {1}
             }} ", memberInfo.Name);
             return str;
         }
-        public static string GetFloat64(CodeMemberInfo memberInfo)
+        public static string GetInt64(CodeMemberInfo memberInfo)
         {
             var str = string.Format(@"  
             foreach (var _byte in BitConverter.GetBytes(this.{0}))
@@ -426,10 +417,10 @@ namespace {1}
         public static string GetString(CodeMemberInfo memberInfo)
         {
             var str = string.Format(@"
-            var nameBytes = System.Text.Encoding.Unicode.GetBytes(this.{0});
-            buffer[offset] = (byte)nameBytes.Length;
+            var {0}Bytes = System.Text.Encoding.Unicode.GetBytes(this.{0});
+            buffer[offset] = (byte){0}Bytes.Length;
             offset += 1;
-            foreach (var _byte in nameBytes)
+            foreach (var _byte in {0}Bytes)
             {{
                 buffer[offset] = _byte;
                 offset += 1;
@@ -437,7 +428,6 @@ namespace {1}
 
             return str;
         }
-
         public static string GetObject(CodeMemberInfo memberInfo)
         {
             //if (this.Role == null)
@@ -477,12 +467,10 @@ namespace {1}
             return str;
         }
 
-
-
         #region array
         public static string GetArrayBool(CodeMemberInfo memberInfo)
         {
-           
+
             var str = string.Format(@"  
             var count{0} = this.{0} == null ? 0 : this.{0}.Count;
             buffer[offset] = (byte)count{0};
@@ -591,12 +579,6 @@ namespace {1}
             }}}}", memberInfo.Name);
             return str;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="memberInfo"></param>
-        /// <returns></returns>
         public static string GetArrayInt32(CodeMemberInfo memberInfo)
         {
             var str = string.Format(@"  
@@ -699,7 +681,6 @@ namespace {1}
             }}}}", memberInfo.Name);
             return str;
         }
-
         public static string GetArrayObject(CodeMemberInfo memberInfo)
         {
             //var countRoleList = this.RoleList == null ? 0 : this.RoleList.Count;
@@ -764,7 +745,6 @@ namespace {1}
     public class CodeReadHelper
     {
 
-
         public static string Get_Method_Header(CodeClassInfo codeClassInfo)
         {
             var str = string.Format(@"
@@ -773,7 +753,6 @@ namespace {1}
             var msg = new {0}();", codeClassInfo.ClassName);
             return str;
         }
-
         public static string Get_Method_Foot()
         {
             var str = string.Format(@"
@@ -781,10 +760,6 @@ namespace {1}
         }}");
             return str;
         }
-
-
-
-
         public static string GetBool(CodeMemberInfo info)
         {
             var str = string.Format(@"
@@ -844,20 +819,20 @@ namespace {1}
             offset+=4;", propertName);
             return str;
         }
-        public static string GetFloat64(string propertName)
+        public static string GetInt64(string propertName)
         {
             var str = string.Format(@"
-            msg.{0}=BitConverter.ToDouble(buffer, offset);
+            msg.{0}=BitConverter.ToInt64(buffer, offset);
             offset+=8;", propertName);
             return str;
         }
         public static string GetString(string propertName)
         {
             var str = string.Format(@"
-            var strLength=buffer[offset];
+            var {0}Length=buffer[offset];
             offset++;
-            msg.{0}=System.Text.Encoding.Unicode.GetString(buffer, offset,strLength);
-            offset+=strLength;", propertName);
+            msg.{0}=System.Text.Encoding.Unicode.GetString(buffer, offset,{0}Length);
+            offset+={0}Length;", propertName);
             return str;
         }
         public static string GetObject(CodeMemberInfo info)
@@ -888,12 +863,11 @@ namespace {1}
                 var _buffer = new ArraySegment<byte>(buffer, offset, {0}Length).ToArray();
                 msg.{0} = {1}.Read(_buffer, 0);
                 offset += {0}Length;
-            }}", info.Name,info.TypeName);
+            }}", info.Name, info.TypeName);
             return str;
         }
 
         #region Array
-
         public static string GetArrayBool(CodeMemberInfo info)
         {
             var str = string.Format(@"
@@ -910,7 +884,6 @@ namespace {1}
             return str;
 
         }
-
         public static string GetArrayInt8(CodeMemberInfo info)
         {
             var str = string.Format(@"
@@ -926,7 +899,6 @@ namespace {1}
             msg.{0} = list{0}; ", info.Name, info.TypeName);
             return str;
         }
-
         public static string GetArrayUInt8(CodeMemberInfo info)
         {
             var str = string.Format(@"
@@ -1085,11 +1057,9 @@ namespace {1}
             //offset+=strLength;", propertName);
             //return str;
         }
-
-
         public static string GetArrayObject(CodeMemberInfo memberInfo)
         {
-            
+
             //var countRoleList = buffer[offset];
             //offset++;
             //var listRoleList = new List<Role>();

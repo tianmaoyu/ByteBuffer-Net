@@ -19,25 +19,31 @@ namespace BufferWriteAndRead
 
         public static byte[] Clientbuffer = new byte[1024 * 10];
 
+        public static Action<string> onTest;
+
         static void Main(string[] args)
         {
-            var bn = BitConverter.GetBytes('n');
-            var b1 = BitConverter.GetBytes('你');
-            var b2 = BitConverter.GetBytes('好');
-            var bytes = System.Text.Encoding.Unicode.GetBytes("n你好");
-            foreach (var b in bytes)
+
+            EntityBase entity = new Etity1();
+
+            ///
+            onTest+=new Action<string>((ss) => { Console.WriteLine("dd");});
+
+            if (onTest == null)
             {
-                Console.WriteLine(b);
+                onTest.Invoke("sss");
             }
-            var str1 = System.Text.Encoding.Unicode.GetString(bytes);
-            var str =  BitConverter.ToString(bytes);
-            //ByteBufferReflection.test();
-            //TestUser();
+
+            var entity2 = new Etity1();
+
+            entity2.Say();
+
+
             CodeGenerate.Run();
-          
+
 
             return;
-           
+
 
 
 
@@ -68,13 +74,13 @@ namespace BufferWriteAndRead
             _role.RoleId = 2;
             _role.RoleName = "admin";
 
-            var roleBuffer= _role.Write();
+            var roleBuffer = _role.Write();
             var _role1 = Role.Read(roleBuffer, 0);
 
 
             var user = new User();
             user.Bool = false;
-            user.boolList = new List<bool>() {false,true };
+            user.boolList = new List<bool>() { false, true };
             //user.Byte = 1;
             user.Char = 'A';
             //user.Float = 33.43F;
@@ -135,98 +141,112 @@ namespace BufferWriteAndRead
 
     }
 
+    public abstract class EntityBase
+    {
+        public static virtual void Say()
+        {
+            Console.WriteLine("EntityBase");
+        }
+
+    }
+
+    public class Etity1 : EntityBase
+    {
+        public override void Say()
+        {
+            Console.WriteLine("Etity1");
+        }
+    }
+
+    //public class Server
+    //{
+    //    public void StarThreadRun()
+    //    {
+    //        Task.Factory.StartNew(() =>
+    //        {
+    //            this.ReadBuffer();
+    //        });
+    //    }
+
+    //    private void ReadBuffer()
+    //    {
+
+    //        while (true)
+    //        {
+    //            Thread.Sleep(20);//ms
+    //            var index = 0;
+    //            for (int i = 0; i < 1024 * 10; i = i + 32)
+    //            {
+
+    //                var rw = (byte)Program.Clientbuffer[index];
+
+    //                if (rw == (byte)1) break;
+    //                index += 32;
+    //            }
+    //            if (index > 1024 * 10 - 1) continue;
+    //            var type = Program.Clientbuffer[index + 1];
+
+    //            if (type == (byte)MsgType.type1)
+    //            {
+    //                var msg1 = new Msg1();
+    //                msg1.ReadMsg(index);
+    //                var jsonStr = JsonConvert.SerializeObject(msg1, Formatting.Indented);
+    //                Console.WriteLine(jsonStr);
+    //            }
+    //        }
+
+    //    }
+
+    //}
+
+
+    //public class Client
+    //{
+    //    public int ClientId { get; set; }
+
+    //    public void StarThreadRun()
+    //    {
+    //        Task.Factory.StartNew(() =>
+    //        {
+    //            this.WriteBuffer();
+    //        });
+    //    }
 
 
 
-        //public class Server
-        //{
-        //    public void StarThreadRun()
-        //    {
-        //        Task.Factory.StartNew(() =>
-        //        {
-        //            this.ReadBuffer();
-        //        });
-        //    }
 
-        //    private void ReadBuffer()
-        //    {
+    //    /// <summary>
+    //    /// 写
+    //    /// </summary>
+    //    private void WriteBuffer()
+    //    {
+    //        while (true)
+    //        {
 
-        //        while (true)
-        //        {
-        //            Thread.Sleep(20);//ms
-        //            var index = 0;
-        //            for (int i = 0; i < 1024 * 10; i = i + 32)
-        //            {
+    //            Thread.Sleep(50);//MS
+    //            var index = this.ClientId * 1024;
 
-        //                var rw = (byte)Program.Clientbuffer[index];
+    //            for (int i = 0; i < 1024; i = i + 32)
+    //            {
+    //                var rw = (byte)Program.Clientbuffer[index];
 
-        //                if (rw == (byte)1) break;
-        //                index += 32;
-        //            }
-        //            if (index > 1024 * 10 - 1) continue;
-        //            var type = Program.Clientbuffer[index + 1];
+    //                if (rw == (byte)0) break;
+    //                index += 32;
+    //            }
+    //            if (index > this.ClientId * 1024 + 1024) continue;
 
-        //            if (type == (byte)MsgType.type1)
-        //            {
-        //                var msg1 = new Msg1();
-        //                msg1.ReadMsg(index);
-        //                var jsonStr = JsonConvert.SerializeObject(msg1, Formatting.Indented);
-        //                Console.WriteLine(jsonStr);
-        //            }
-        //        }
-
-        //    }
-
-        //}
+    //            var msg1 = new Msg1();
+    //            msg1.WriteMsg(index);
 
 
-        //public class Client
-        //{
-        //    public int ClientId { get; set; }
-
-        //    public void StarThreadRun()
-        //    {
-        //        Task.Factory.StartNew(() =>
-        //        {
-        //            this.WriteBuffer();
-        //        });
-        //    }
+    //        }
+    //    }
 
 
 
-
-        //    /// <summary>
-        //    /// 写
-        //    /// </summary>
-        //    private void WriteBuffer()
-        //    {
-        //        while (true)
-        //        {
-
-        //            Thread.Sleep(50);//MS
-        //            var index = this.ClientId * 1024;
-
-        //            for (int i = 0; i < 1024; i = i + 32)
-        //            {
-        //                var rw = (byte)Program.Clientbuffer[index];
-
-        //                if (rw == (byte)0) break;
-        //                index += 32;
-        //            }
-        //            if (index > this.ClientId * 1024 + 1024) continue;
-
-        //            var msg1 = new Msg1();
-        //            msg1.WriteMsg(index);
+    //}
 
 
-        //        }
-        //    }
-
-
-
-        //}
-
-   
     public partial class Msg1 : IMsg
     {
         [ByteMember(1, ByteType.Int8)]
