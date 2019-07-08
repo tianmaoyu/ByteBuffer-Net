@@ -20,24 +20,24 @@ namespace BufferWriteAndRead
         public static byte[] Clientbuffer = new byte[1024 * 10];
 
         public static Action<string> onTest;
-
+         public static class BitTools
+    {
+        public static int SignExtend32(int value, int bits)
+        {
+            int shift = 8 * sizeof(int) - bits;
+            return (value << shift) >> shift;
+        }
+    }
         static void Main(string[] args)
         {
 
-            EntityBase entity = new Etity1();
 
-            ///
-            onTest+=new Action<string>((ss) => { Console.WriteLine("dd");});
-
-            if (onTest == null)
-            {
-                onTest.Invoke("sss");
-            }
-
-            var entity2 = new Etity1();
-
-            entity2.Say();
-
+           var bytes=  UInt24.GetBytes(UInt24.MaxVlaue);
+           var value=  UInt24.ReadUInt24(bytes, 0);
+         
+            var bytes4 = Int24.GetBytes(Int24.MiniValue);
+            var bytes2 = Int24.GetBytes(-12);
+            var value2 = Int24.ReadInt24(bytes4, 0);
 
             CodeGenerate.Run();
 
@@ -141,22 +141,22 @@ namespace BufferWriteAndRead
 
     }
 
-    public abstract class EntityBase
-    {
-        public static virtual void Say()
-        {
-            Console.WriteLine("EntityBase");
-        }
+    //public abstract class EntityBase
+    //{
+    //    public static virtual void Say()
+    //    {
+    //        Console.WriteLine("EntityBase");
+    //    }
 
-    }
+    //}
 
-    public class Etity1 : EntityBase
-    {
-        public override void Say()
-        {
-            Console.WriteLine("Etity1");
-        }
-    }
+    //public class Etity1 : EntityBase
+    //{
+    //    public override void Say()
+    //    {
+    //        Console.WriteLine("Etity1");
+    //    }
+    //}
 
     //public class Server
     //{

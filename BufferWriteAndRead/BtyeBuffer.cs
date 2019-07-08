@@ -60,6 +60,8 @@ namespace BufferWriteAndRead
         /// </summary>
         Uint16 = 4,
 
+       
+
         /// <summary>
         ///int 有符号 32 位整数  -2,147,483,648 到 2,147,483,647
         /// </summary>
@@ -103,6 +105,11 @@ namespace BufferWriteAndRead
         StringArray = 29,
 
         ObjectArray = 30,
+
+        Int24=31,
+        UInt24 =32,
+        UInt24Array = 33,
+     
     }
 
 }
