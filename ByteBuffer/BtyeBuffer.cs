@@ -9,10 +9,7 @@ namespace ByteBuffer
     /// 契约
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class BtyeContract : Attribute
-    {
-
-    }
+    public class BtyeContract : Attribute { }
 
     /// <summary>
     /// 成员
@@ -58,7 +55,7 @@ namespace ByteBuffer
         /// <summary>
         /// ushort 无符号 16 位整数  0 到 65,535
         /// </summary>
-        Uint16 = 4,
+        UInt16 = 4,
 
        
 
@@ -70,7 +67,7 @@ namespace ByteBuffer
         /// <summary>
         ///uint 无符号 32 位整数  0 到 4,294,967,295
         /// </summary>
-        Uint32 = 6,
+        UInt32 = 6,
 
         /// <summary>
         /// 32 为 带小数类型 float
@@ -92,11 +89,11 @@ namespace ByteBuffer
 
         Int16Array = 23,
 
-        Uint16Array = 24,
+        UInt16Array = 24,
 
         Int32Array = 25,
 
-        Uint32Array = 26,
+        UInt32Array = 26,
 
         Float32Array = 27,
 
@@ -106,10 +103,12 @@ namespace ByteBuffer
 
         ObjectArray = 30,
 
-        Int24=31,
-        UInt24 =32,
-        UInt24Array = 33,
-     
+        //新增int24
+        Int24 = 31,
+        UInt24 = 32,
+        Int24Array = 33,
+        UInt24Array = 34,
+
     }
 
 }

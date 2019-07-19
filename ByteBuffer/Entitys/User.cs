@@ -7,7 +7,7 @@ namespace ByteBuffer.Entitys
     [BtyeContract]
     public partial class User:Entity
     {
-        [ByteMember(1, ByteType.Uint16)]
+        [ByteMember(1, ByteType.UInt16)]
         public UInt16 UInt16 { get; set; }
 
         /// <summary>
@@ -30,13 +30,13 @@ namespace ByteBuffer.Entitys
 
         //public sbyte SByte { get; set; }
 
-        [ByteMember(5, ByteType.Uint16)]
+        [ByteMember(5, ByteType.UInt16)]
         public ushort UShort { get; set; }
 
-        [ByteMember(6, ByteType.Uint16)]
+        [ByteMember(6, ByteType.UInt16)]
         public int Id { get; set; }
 
-        [ByteMember(7, ByteType.Uint16Array)]
+        [ByteMember(7, ByteType.UInt16Array)]
         public List<int> IdList { get; set; }
 
         [ByteMember(8, ByteType.BoolArray)]

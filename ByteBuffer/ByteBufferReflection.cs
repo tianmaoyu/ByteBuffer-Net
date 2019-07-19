@@ -42,7 +42,7 @@ namespace ByteBuffer
     [BtyeContract]
     public partial class CreateMsg
     {
-        [ByteMember(1,ByteType.Uint16)]
+        [ByteMember(1,ByteType.UInt16)]
         public UInt16 UInt16 { get; set; }
 
         [ByteMember(2, ByteType.UInt8)]
@@ -64,7 +64,7 @@ namespace ByteBuffer
         [ByteMember(7, ByteType.UInt8)]
         public sbyte SByte { get; set; }
 
-        [ByteMember(8, ByteType.Uint16)]
+        [ByteMember(8, ByteType.UInt16)]
         public ushort UShort { get; set; }
 
         [ByteMember(9, ByteType.String)]

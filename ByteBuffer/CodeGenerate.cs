@@ -118,13 +118,13 @@ namespace {1}
                     case ByteType.Int16:
                         str += CodeWriteHelper.GetInt16(info);
                         break;
-                    case ByteType.Uint16:
+                    case ByteType.UInt16:
                         str += CodeWriteHelper.GetUInt16(info);
                         break;
                     case ByteType.Int32:
                         str += CodeWriteHelper.GetInt32(info);
                         break;
-                    case ByteType.Uint32:
+                    case ByteType.UInt32:
                         str += CodeWriteHelper.GetUInt32(info);
                         break;
                     case ByteType.Float32:
@@ -154,13 +154,13 @@ namespace {1}
                     case ByteType.Int16Array:
                         str += CodeWriteHelper.GetArrayInt16(info);
                         break;
-                    case ByteType.Uint16Array:
+                    case ByteType.UInt16Array:
                         str += CodeWriteHelper.GetArrayUInt16(info);
                         break;
                     case ByteType.Int32Array:
                         str += CodeWriteHelper.GetArrayInt32(info);
                         break;
-                    case ByteType.Uint32Array:
+                    case ByteType.UInt32Array:
                         str += CodeWriteHelper.GetArrayUInt32(info);
                         break;
                     case ByteType.Float32Array:
@@ -175,6 +175,9 @@ namespace {1}
                     case ByteType.ObjectArray:
                         str += CodeWriteHelper.GetArrayObject(info);
                         break;
+
+                    default:
+                        throw new Exception("类型错误");
                 }
             }
             str += CodeWriteHelper.Get_Method_Foot();
@@ -198,13 +201,13 @@ namespace {1}
                     case ByteType.Int16:
                         str += CodeReadHelper.GetInt16(info.Name);
                         break;
-                    case ByteType.Uint16:
+                    case ByteType.UInt16:
                         str += CodeReadHelper.GetUInt16(info.Name);
                         break;
                     case ByteType.Int32:
                         str += CodeReadHelper.GetInt32(info.Name);
                         break;
-                    case ByteType.Uint32:
+                    case ByteType.UInt32:
                         str += CodeReadHelper.GetUInt32(info.Name);
                         break;
                     case ByteType.Float32:
@@ -233,13 +236,13 @@ namespace {1}
                     case ByteType.Int16Array:
                         str += CodeReadHelper.GetArrayInt16(info.Name);
                         break;
-                    case ByteType.Uint16Array:
+                    case ByteType.UInt16Array:
                         str += CodeReadHelper.GetArrayUInt16(info.Name);
                         break;
                     case ByteType.Int32Array:
                         str += CodeReadHelper.GetArrayInt32(info.Name);
                         break;
-                    case ByteType.Uint32Array:
+                    case ByteType.UInt32Array:
                         str += CodeReadHelper.GetArrayUInt32(info.Name);
                         break;
                     case ByteType.Float32Array:
@@ -254,6 +257,10 @@ namespace {1}
                     case ByteType.ObjectArray:
                         str += CodeReadHelper.GetArrayObject(info);
                         break;
+
+                    default:
+                        throw new Exception("类型错误");
+
                 }
             }
             str += CodeReadHelper.Get_Method_Foot();
