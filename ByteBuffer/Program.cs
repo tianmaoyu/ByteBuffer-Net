@@ -1,4 +1,4 @@
-﻿using BufferWriteAndRead.Entitys;
+﻿using ByteBuffer.Entitys;
 using Newtonsoft.Json;
 //using Newtonsoft.Json;
 using System;
@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BufferWriteAndRead
+namespace ByteBuffer
 {
     class Program
     {
@@ -20,21 +20,21 @@ namespace BufferWriteAndRead
         public static byte[] Clientbuffer = new byte[1024 * 10];
 
         public static Action<string> onTest;
-         public static class BitTools
-    {
-        public static int SignExtend32(int value, int bits)
+        public static class BitTools
         {
-            int shift = 8 * sizeof(int) - bits;
-            return (value << shift) >> shift;
+            public static int SignExtend32(int value, int bits)
+            {
+                int shift = 8 * sizeof(int) - bits;
+                return (value << shift) >> shift;
+            }
         }
-    }
         static void Main(string[] args)
         {
+            var bytes0= System.Text.Encoding.Unicode.GetBytes("sssssssssss 你好");
 
+            var bytes = UInt24.GetBytes(UInt24.MaxVlaue);
+            var value = UInt24.ReadUInt24(bytes, 0);
 
-           var bytes=  UInt24.GetBytes(UInt24.MaxVlaue);
-           var value=  UInt24.ReadUInt24(bytes, 0);
-         
             var bytes4 = Int24.GetBytes(Int24.MiniValue);
             var bytes2 = Int24.GetBytes(-12);
             var value2 = Int24.ReadInt24(bytes4, 0);

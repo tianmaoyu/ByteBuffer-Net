@@ -1,6 +1,6 @@
 using System;
 
-namespace Web.Models
+namespace ByteBufferWebTest.Models
 {
     public class ErrorViewModel
     {

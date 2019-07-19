@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace BufferWriteAndRead
+namespace ByteBuffer
 {
     public class ByteBufferReflection
     {

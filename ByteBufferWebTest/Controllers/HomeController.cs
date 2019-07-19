@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Web.Models;
+using ByteBufferWebTest.Models;
 
-namespace Web.Controllers
+namespace ByteBufferWebTest.Controllers
 {
     public class HomeController : Controller
     {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-namespace BufferWriteAndRead
+namespace ByteBuffer
 {
      public partial class CreateMsg
      {  

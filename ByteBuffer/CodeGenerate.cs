@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace BufferWriteAndRead
+namespace ByteBuffer
 {
     public class CodeGenerate
     {
@@ -417,7 +417,7 @@ namespace {1}
         public static string GetString(CodeMemberInfo memberInfo)
         {
             var str = string.Format(@"
-            var {0}Bytes = System.Text.Encoding.Unicode.GetBytes(this.{0});
+            var {0}Bytes = BtyeBuffer.StringEncoding.GetBytes(this.{0});
             buffer[offset] = (byte){0}Bytes.Length;
             offset += 1;
             foreach (var _byte in {0}Bytes)
@@ -670,7 +670,7 @@ namespace {1}
             {{ 
             foreach (var item in this.{0})
             {{
-                 var nameBytes = System.Text.Encoding.Unicode.GetBytes(item);
+                 var nameBytes = BtyeBuffer.StringEncoding.GetBytes(item);
                  buffer[offset] = (byte)nameBytes.Length;
                  offset += 1;
                  foreach (var _byte in nameBytes)
@@ -831,7 +831,7 @@ namespace {1}
             var str = string.Format(@"
             var {0}Length=buffer[offset];
             offset++;
-            msg.{0}=System.Text.Encoding.Unicode.GetString(buffer, offset,{0}Length);
+            msg.{0}=BtyeBuffer.StringEncoding.GetString(buffer, offset,{0}Length);
             offset+={0}Length;", propertName);
             return str;
         }
@@ -1043,7 +1043,7 @@ namespace {1}
             {{
                 var strLength=buffer[offset];
                 offset++;
-                var item=System.Text.Encoding.Unicode.GetString(buffer, offset,strLength);
+                var item=BtyeBuffer.StringEncoding.GetString(buffer, offset,strLength);
                 offset+=strLength;
                 list{0}.Add(item);
             }}

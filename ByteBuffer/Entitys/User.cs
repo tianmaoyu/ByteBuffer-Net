@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BufferWriteAndRead.Entitys
+namespace ByteBuffer.Entitys
 {
     [BtyeContract]
     public partial class User:Entity
