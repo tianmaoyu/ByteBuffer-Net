@@ -9,11 +9,16 @@ namespace ByteBuffer
 {
     public class CodeGenerate
     {
-        public static void Run()
+
+        /// <summary>
+        /// 生产code  
+        /// </summary>
+        /// <param name="assmble">当前的 Assembly.GetExecutingAssembly();</param>
+        public static void Run(Assembly assmble)
         {
             var projectPath = Path.GetFullPath("../../..");
 
-            var assmble = Assembly.GetExecutingAssembly();
+            //var assmble = Assembly.GetExecutingAssembly();
             var modules = assmble.GetModules();
             var types = new List<Type>();
             foreach (var module in modules)
@@ -82,6 +87,7 @@ namespace ByteBuffer
         private static string Get_Class_Header(CodeClassInfo codeClassInfo)
         {
             var str = String.Format(@"
+using ByteBuffer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -342,8 +348,8 @@ namespace {1}
             var str = string.Format(@"  
         public override byte[] Write()
         {{
-            var buffer = new byte[64];
-            var offset = 0;");
+            var buffer = new byte[{0}];
+            var offset = 0;",Config.Message_Buffer_Max);
             return str;
         }
         public static string Get_Method_Foot()

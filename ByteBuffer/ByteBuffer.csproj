@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Entitys\Generate\Role.cs" />
+    <Compile Remove="Entitys\Generate\User.cs" />
+    <Compile Remove="Entitys\User.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
   </ItemGroup>
 
