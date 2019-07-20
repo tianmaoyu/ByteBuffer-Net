@@ -19,76 +19,17 @@ namespace ByteBuffer
 
         public static byte[] Clientbuffer = new byte[1024 * 10];
 
-        public static Action<string> onTest;
-
-        public static Byte[] GetBytes(int value)
-        {
-            var bytes = new byte[3];
-            bytes[0] = (byte)(value);
-            bytes[1] = (byte)((value >> 8));
-            bytes[2] = (byte)((value >> 16) );
-            return bytes;
-
-            //var bytes = new byte[3];
-            //bytes[0] = (byte)(value & 0xFF);
-            //bytes[1] = (byte)((value >> 8) & 0xFF);
-            //bytes[2] = (byte)((value >> 16) & 0xFF);
-            //return bytes;
-
-        }
-
-        public static int ReadInt24(byte[] buffer)
-        {
-            return buffer[0] | buffer[1] << 8 | ((sbyte)buffer[2] << 16) /*| buffer[3] << 24*/;
-            Console.WriteLine(buffer[0].ToString());
-            Console.WriteLine((buffer[1] << 8).ToString());
-            Console.WriteLine((((sbyte)buffer[2] << 16)).ToString());
-        }
-
-        public static int ReadUInt24(byte[] buffer)
-        {
-            return buffer[0] | buffer[1] << 8 | (buffer[2] << 16) /*| buffer[3] << 24*/;
-        }
 
         static void Main(string[] args)
         {
 
+            //CodeGenerate.Run();
 
-            for(var i = Int24.MiniValue; i < Int24.MaxVlaue; i++)
-            {
-                var _i = Int24.ReadInt24(Int24.GetBytes(i), 0);
-                if (i != _i)
-                {
-                    Console.Beep();
-                    Console.WriteLine("不相等");
-                }
-            }
-            Console.ReadLine();
-
-            Int16 int16 = 655;
-           
-            var bites = BitConverter.GetBytes(-12);
-            var cc = ReadInt24(bites);
-            var cc2= ReadUInt24(bites);
-            //var value5 = ReadUInt24(-12);
-
-            var bites2 = BitConverter.GetBytes(int16);
-
-            var bites3 = new byte[2];
-            //bites3[0] =(byte)(-12 & 0xff);
-            //bites3[1] = (byte)((-12) >> 8);
-            var bite4 = GetBytes(Int24.MiniValue);
-
-            var bytes0= System.Text.Encoding.Unicode.GetBytes("sssssssssss 你好");
-            var bytes = UInt24.GetBytes(UInt24.MaxVlaue);
-            var value = UInt24.ReadUInt24(bytes, 0);
-            var bytes4 = Int24.GetBytes(Int24.MiniValue);
-            var bytes2 = Int24.GetBytes(-12);
-            var value2 = Int24.ReadInt24(bytes4, 0);
+            TestUser();
 
 
             //return;
-           // CodeGenerate.Run();
+            // CodeGenerate.Run();
 
             //var client = new Client();
             //client.ClientId = 0;
@@ -116,7 +57,6 @@ namespace ByteBuffer
             var _role = new Role();
             _role.RoleId = 2;
             _role.RoleName = "admin";
-
             var roleBuffer = _role.Write();
             var _role1 = Role.Read(roleBuffer, 0);
 
@@ -124,58 +64,37 @@ namespace ByteBuffer
             var user = new User();
             user.Bool = false;
             user.boolList = new List<bool>() { false, true };
-            //user.Byte = 1;
             user.Char = 'A';
-            //user.Float = 33.43F;
             user.floatList = new List<float>() { 12.1F, 12.1F };
             user.Id = 1;
             user.IdList = new List<int>() { 1, 2, 3 };
             user.StringList = new List<string>() { "SS", "ERC" };
             user.UInt16 = 12;
-            //user.SByte = 1;
             user.UShort = 2342;
             var role = new Role();
             role.RoleId = 2;
             role.RoleName = "admin";
+            role.Id = -122334;
+            role.Ids = new List<int>() { Int24.MiniValue, Int24.MaxVlaue, 0 };
             user.Role = role;
             var roleList = new List<Role>();
             var role1 = new Role();
             role1.RoleId = 3;
+            role1.Id = 1222;
             role1.RoleName = "user1";
             roleList.Add(role1);
             var role2 = new Role();
             role2.RoleId = 4;
+            role2.Id = -3737;
             role2.RoleName = "user2";
             roleList.Add(role2);
+            roleList.Add(role);
             user.RoleList = roleList;
 
-            //var buffer = user.Write();
-            //var user1 = User.Read(buffer, 0);
+            var buffer = user.Write();
+            var _user = User.Read(buffer, 0);
+            ;
 
-            //性能对比
-            //var wathc = new Stopwatch();
-            //wathc.Start();
-            //byte[] buffer=null;
-            //for (var i = 0; i < 100000; i++)
-            //{
-            //    buffer = user.Write();
-            //    var user1 = User.Read(buffer, 0);
-
-            //}
-            //wathc.Stop();
-            //Console.WriteLine(buffer.Length);
-            //Console.WriteLine("json:" + wathc.ElapsedMilliseconds);
-            //wathc.Reset();
-            //wathc.Restart();
-            //var json = string.Empty;
-            //for (var i = 0; i < 100000; i++)
-            //{
-            //    json = JsonConvert.SerializeObject(user);
-            //    JsonConvert.DeserializeObject(json);
-            //}
-            //wathc.Stop();
-            //Console.WriteLine(Encoding.Unicode.GetBytes(json).Length);
-            //Console.WriteLine("btye:" + wathc.ElapsedMilliseconds);
         }
 
 

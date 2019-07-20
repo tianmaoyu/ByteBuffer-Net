@@ -9,7 +9,6 @@ namespace ByteBuffer
     /// </summary>
     public class Int24
     {
-
         public const int MaxVlaue = 0x7FFFFF;//,8388607
         public const int MiniValue = -(0x7FFFFF+1);// -8388608
         /// <summary>
@@ -21,11 +20,6 @@ namespace ByteBuffer
         public static int ReadInt24(byte[] buffer, int offset)
         {
              return buffer[offset + 0] | buffer[offset + 1] << 8 | (sbyte)buffer[offset + 2] << 16;
-
-            //int value =    (src[offset + 0] & 0xFF)
-            //            | ((src[offset + 1] & 0xFF) << 8)
-            //            | ((src[offset + 2] & 0xFF) << 16)
-            //return value;
         }
         public static Byte[] GetBytes(int value)
         {
@@ -34,13 +28,11 @@ namespace ByteBuffer
             bytes[1] = (byte)(value >> 8);
             bytes[2] = (byte)(value >> 16) ;
             return bytes;
-
             //var bytes = new byte[3];
             //bytes[0] = (byte)(value & 0xFF);
             //bytes[1] = (byte)((value >> 8) & 0xFF);
             //bytes[2] = (byte)((value >> 16) & 0xFF);
             //return bytes;
-
         }
 
     }

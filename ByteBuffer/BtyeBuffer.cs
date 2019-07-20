@@ -101,6 +101,9 @@ namespace ByteBuffer
 
         StringArray = 29,
 
+        /// <summary>
+        /// 使用这个时 一定要传第三个参数
+        /// </summary>
         ObjectArray = 30,
 
         //新增int24

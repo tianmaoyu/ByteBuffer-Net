@@ -39,7 +39,7 @@ namespace ByteBuffer
 
     }
 
-    [BtyeContract]
+    //[BtyeContract]
     public partial class CreateMsg
     {
         [ByteMember(1,ByteType.UInt16)]
@@ -71,88 +71,4 @@ namespace ByteBuffer
         public String Name { get; set; }
 
     }
-
-    /// <summary>
-    ///  读写
-    /// </summary>
-    public partial class CreateMsg
-    {
-        public byte[] Write1()
-        {
-            var buffer = new byte[32];
-            var offset = 0;
-
-           
-
-            foreach (var _byte in BitConverter.GetBytes(this.UInt16))
-            {
-                buffer[offset] = _byte;
-                offset += 1;
-            }
-
-            buffer[offset] = (byte)this.Char;
-            offset += 1;
-
-
-            buffer[offset] = (byte)(this.Bool?1:0);
-            offset += 1;
-
-            foreach (var _byte in BitConverter.GetBytes(this.Char))
-            {
-                buffer[offset] = _byte;
-                offset += 1;
-            }
-
-            foreach (var _byte in BitConverter.GetBytes(this.Int16))
-            {
-                buffer[offset] = _byte;
-                offset += 1;
-            }
-
-            foreach (var _byte in BitConverter.GetBytes(this.Float))
-            {
-                buffer[offset] = _byte;
-                offset += 1;
-            }
-
-            foreach (var _byte in BitConverter.GetBytes(this.Float))
-            {
-                buffer[offset] = _byte;
-                offset += 1;
-            }
-
-            Program.Clientbuffer[offset] = Byte;
-            offset += 1;
-
-
-            var nameBytes = System.Text.Encoding.UTF8.GetBytes(this.Name);
-            Program.Clientbuffer[offset] = (byte)nameBytes.Length;
-            offset += 1;
-            foreach (var _byte in nameBytes)
-            {
-                buffer[offset] = _byte;
-                offset += 1;
-            }
-
-            return buffer;
-        }
-
-
-        public static CreateMsg Read1(byte[] buffer,int offset)
-        {
-            var msg = new CreateMsg();
-            //var
-
-
-
-
-            return msg;
-        }
-
-    }
-
-
-
-
-
 }

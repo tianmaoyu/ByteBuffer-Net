@@ -28,7 +28,6 @@
 
   <ItemGroup>
     <Folder Include="Entitys\Generate\" />
-    <Folder Include="Generate\" />
   </ItemGroup>
 
 </Project>

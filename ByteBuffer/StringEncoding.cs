@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ByteBuffer
 {
-   public class StringEncoding
+    public class StringEncoding
     {
         public static byte[] GetBytes(string str)
         {

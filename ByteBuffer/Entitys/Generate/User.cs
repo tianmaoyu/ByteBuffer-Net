@@ -8,18 +8,18 @@ namespace ByteBuffer.Entitys
 {
      public partial class User
      {  
-        public byte[] Write()
+        public override byte[] Write()
         {
-            var buffer = new byte[64];
+            var buffer = new byte[256];
             var offset = 0;  
-            buffer[offset] = Convert.ToByte(this.EntityId);
-            offset += 1;  
             foreach (var _byte in BitConverter.GetBytes(Convert.ToUInt16(this.UInt16)))
             {
                 buffer[offset] = _byte;
                 offset += 1;
             }   
             buffer[offset] = Convert.ToByte(this.Char);
+            offset += 1;  
+            buffer[offset] =(byte)(this.Bool? 1 : 0);
             offset += 1;  
             foreach (var _byte in BitConverter.GetBytes(Convert.ToInt16(this.Int16)))
             {
@@ -93,7 +93,7 @@ namespace ByteBuffer.Entitys
             { 
             foreach (var item in this.StringList)
             {
-                 var nameBytes = System.Text.Encoding.Unicode.GetBytes(item);
+                 var nameBytes = StringEncoding.GetBytes(item);
                  buffer[offset] = (byte)nameBytes.Length;
                  offset += 1;
                  foreach (var _byte in nameBytes)
@@ -148,11 +148,11 @@ namespace ByteBuffer.Entitys
         public static User Read(byte[] buffer,int offset)
         {
             var msg = new User();
-            msg.EntityId=(Int32)buffer[offset];
-            offset++; 
             msg.UInt16=BitConverter.ToUInt16(buffer, offset);
             offset+=2;
             msg.Char=(Char)buffer[offset];
+            offset++; 
+            msg.Bool=buffer[offset]==1;
             offset++; 
             msg.Int16=BitConverter.ToInt16(buffer, offset);
             offset+=2;
@@ -207,7 +207,7 @@ namespace ByteBuffer.Entitys
             {
                 var strLength=buffer[offset];
                 offset++;
-                var item=System.Text.Encoding.Unicode.GetString(buffer, offset,strLength);
+                var item=StringEncoding.GetString(buffer, offset,strLength);
                 offset+=strLength;
                 listStringList.Add(item);
             }

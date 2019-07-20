@@ -60,7 +60,7 @@ namespace ByteBuffer
                 var fileDir = projectPath + inerPath + @"\Generate\";
                 if (!Directory.Exists(fileDir)) Directory.CreateDirectory(fileDir);
                 var fileName = projectPath + inerPath + @"\Generate\" + codeClassInfo.ClassName + ".cs";
-                if (File.Exists(fileName)) continue;
+                //if (File.Exists(fileName)) continue;
                 var fileStream = File.Create(fileName);
                 fileStream.Close();
                 var codeStr = Get_Class(codeClassInfo);
@@ -109,6 +109,10 @@ namespace {1}
             {
                 switch (info.ByteType)
                 {
+
+                    case ByteType.Bool:
+                        str += CodeWriteHelper.GetBool(info);
+                        break;
                     case ByteType.Int8:
                         str += CodeWriteHelper.GetInt8(info);
                         break;
@@ -206,6 +210,10 @@ namespace {1}
             {
                 switch (info.ByteType)
                 {
+
+                    case ByteType.Bool:
+                        str += CodeReadHelper.GetBool(info);
+                        break;
                     case ByteType.Int8:
                         str += CodeReadHelper.GetInt8(info);
                         break;
@@ -345,6 +353,15 @@ namespace {1}
         }}");
             return str;
         }
+
+        public static string GetBool(CodeMemberInfo memberInfo)
+        {
+            var str = string.Format(@"  
+            buffer[offset] =(byte)(this.{0}? 1 : 0);
+            offset += 1;", memberInfo.Name);
+            return str;
+        }
+
         public static string GetInt8(CodeMemberInfo memberInfo)
         {
             //buffer[offset] = Convert.ToByte(memberInfo.Name); ;
@@ -449,7 +466,7 @@ namespace {1}
         public static string GetString(CodeMemberInfo memberInfo)
         {
             var str = string.Format(@"
-            var {0}Bytes = BtyeBuffer.StringEncoding.GetBytes(this.{0});
+            var {0}Bytes = StringEncoding.GetBytes(this.{0});
             buffer[offset] = (byte){0}Bytes.Length;
             offset += 1;
             foreach (var _byte in {0}Bytes)
@@ -702,7 +719,7 @@ namespace {1}
             {{ 
             foreach (var item in this.{0})
             {{
-                 var nameBytes = BtyeBuffer.StringEncoding.GetBytes(item);
+                 var nameBytes = StringEncoding.GetBytes(item);
                  buffer[offset] = (byte)nameBytes.Length;
                  offset += 1;
                  foreach (var _byte in nameBytes)
@@ -775,7 +792,7 @@ namespace {1}
         public static string GetInt24(CodeMemberInfo memberInfo)
         {
             var str = string.Format(@"
-            var {0}Bytes = BtyeBuffer.Int24.GetBytes(this.{0});
+            var {0}Bytes = Int24.GetBytes(this.{0});
             foreach (var _byte in {0}Bytes)
             {{
                 buffer[offset] = _byte;
@@ -787,7 +804,7 @@ namespace {1}
         public static string GetUInt24(CodeMemberInfo memberInfo)
         {
             var str = string.Format(@"
-            var {0}Bytes = BtyeBuffer.UInt24.GetBytes(this.{0});
+            var {0}Bytes = UInt24.GetBytes(this.{0});
             foreach (var _byte in {0}Bytes)
             {{
                 buffer[offset] = _byte;
@@ -806,7 +823,7 @@ namespace {1}
             {{ 
             foreach (var item in this.{0})
             {{
-                foreach (var _byte in  BtyeBuffer.Int24.GetBytes(item))
+                foreach (var _byte in  Int24.GetBytes(item))
                 {{
                     buffer[offset] = _byte;
                     offset ++;
@@ -825,7 +842,7 @@ namespace {1}
             {{ 
             foreach (var item in this.{0})
             {{
-                foreach (var _byte in BtyeBuffer.UInt24.GetBytes(item))
+                foreach (var _byte in UInt24.GetBytes(item))
                 {{
                     buffer[offset] = _byte;
                     offset ++;
@@ -928,7 +945,7 @@ namespace {1}
             var str = string.Format(@"
             var {0}Length=buffer[offset];
             offset++;
-            msg.{0}=BtyeBuffer.StringEncoding.GetString(buffer, offset,{0}Length);
+            msg.{0}=StringEncoding.GetString(buffer, offset,{0}Length);
             offset+={0}Length;", propertName);
             return str;
         }
@@ -1140,7 +1157,7 @@ namespace {1}
             {{
                 var strLength=buffer[offset];
                 offset++;
-                var item=BtyeBuffer.StringEncoding.GetString(buffer, offset,strLength);
+                var item=StringEncoding.GetString(buffer, offset,strLength);
                 offset+=strLength;
                 list{0}.Add(item);
             }}
@@ -1208,14 +1225,14 @@ namespace {1}
         public static string GetInt24(string propertName)
         {
             var str = string.Format(@"
-            msg.{0}=ByteBuffer.Int24.ReadInt24(buffer, offset);
+            msg.{0}=Int24.ReadInt24(buffer, offset);
             offset+=3;", propertName);
             return str;
         }
         public static string GetUInt24(string propertName)
         {
             var str = string.Format(@"
-            msg.{0}=ByteBuffer.UInt24.ReadUInt24(buffer, offset);
+            msg.{0}=UInt24.ReadUInt24(buffer, offset);
             offset+=3;", propertName);
             return str;
         }
@@ -1225,10 +1242,10 @@ namespace {1}
             var str = string.Format(@"
             var count{0} = buffer[offset];
             offset++;
-            var list{0} = new List<float>();
+            var list{0} = new List<int>();
             for (var i = 0; i < count{0}; i++)
             {{
-                var item = ByteBuffer.Int24.ReadInt24(buffer, offset);
+                var item = Int24.ReadInt24(buffer, offset);
                 offset += 3;
                 list{0}.Add(item);
             }}
@@ -1241,10 +1258,10 @@ namespace {1}
             var str = string.Format(@"
             var count{0} = buffer[offset];
             offset++;
-            var list{0} = new List<float>();
+            var list{0} = new List<int>();
             for (var i = 0; i < count{0}; i++)
             {{
-                var item = ByteBuffer.UInt24.ReadUInt24(buffer, offset);
+                var item = UInt24.ReadUInt24(buffer, offset);
                 offset += 3;
                 list{0}.Add(item);
             }}
