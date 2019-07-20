@@ -176,6 +176,20 @@ namespace {1}
                         str += CodeWriteHelper.GetArrayObject(info);
                         break;
 
+                        //新增
+                    case ByteType.Int24:
+                        str += CodeWriteHelper.GetInt24(info);
+                        break;
+                    case ByteType.UInt24:
+                        str += CodeWriteHelper.GetUInt24(info);
+                        break;
+                    case ByteType.Int24Array:
+                        str += CodeWriteHelper.GetInt24Array(info);
+                        break;
+                    case ByteType.UInt24Array:
+                        str += CodeWriteHelper.GetUInt24Array(info);
+                        break;
+
                     default:
                         throw new Exception("类型错误");
                 }
@@ -258,6 +272,19 @@ namespace {1}
                         str += CodeReadHelper.GetArrayObject(info);
                         break;
 
+                    //新增
+                    case ByteType.Int24:
+                        str += CodeReadHelper.GetInt24(info.Name);
+                        break;
+                    case ByteType.UInt24:
+                        str += CodeReadHelper.GetUInt24(info.Name);
+                        break;
+                    case ByteType.Int24Array:
+                        str += CodeReadHelper.GetInt24Array(info.Name);
+                        break;
+                    case ByteType.UInt24Array:
+                        str += CodeReadHelper.GetUInt24Array(info.Name);
+                        break;
                     default:
                         throw new Exception("类型错误");
 
@@ -278,8 +305,6 @@ namespace {1}
         public string Name { get; set; }
 
         public string TypeName { get; set; }
-
-        //public TypeCode TypeCode { get; set; }
 
         public ByteType ByteType { get; set; }
 
@@ -746,6 +771,71 @@ namespace {1}
         }
         #endregion
 
+
+        public static string GetInt24(CodeMemberInfo memberInfo)
+        {
+            var str = string.Format(@"
+            var {0}Bytes = BtyeBuffer.Int24.GetBytes(this.{0});
+            foreach (var _byte in {0}Bytes)
+            {{
+                buffer[offset] = _byte;
+                offset += 1;
+            }}", memberInfo.Name);
+            return str;
+        }
+
+        public static string GetUInt24(CodeMemberInfo memberInfo)
+        {
+            var str = string.Format(@"
+            var {0}Bytes = BtyeBuffer.UInt24.GetBytes(this.{0});
+            foreach (var _byte in {0}Bytes)
+            {{
+                buffer[offset] = _byte;
+                offset += 1;
+            }}", memberInfo.Name);
+            return str;
+        }
+
+        public static string GetInt24Array(CodeMemberInfo memberInfo)
+        {
+            var str = string.Format(@"  
+            var count{0} = this.{0} == null ? 0 : this.{0}.Count;
+            buffer[offset] = (byte)count{0};
+            offset++;
+            if (count{0} > 0)  
+            {{ 
+            foreach (var item in this.{0})
+            {{
+                foreach (var _byte in  BtyeBuffer.Int24.GetBytes(item))
+                {{
+                    buffer[offset] = _byte;
+                    offset ++;
+                }}
+            }}}}", memberInfo.Name);
+            return str;
+        }
+
+        public static string GetUInt24Array(CodeMemberInfo memberInfo)
+        {
+            var str = string.Format(@"  
+            var count{0} = this.{0} == null ? 0 : this.{0}.Count;
+            buffer[offset] = (byte)count{0};
+            offset++;
+            if (count{0} > 0)  
+            {{ 
+            foreach (var item in this.{0})
+            {{
+                foreach (var _byte in BtyeBuffer.UInt24.GetBytes(item))
+                {{
+                    buffer[offset] = _byte;
+                    offset ++;
+                }}
+            }}}}", memberInfo.Name);
+            return str;
+        }
+
+
+
     }
 
 
@@ -1113,6 +1203,56 @@ namespace {1}
         }
 
         #endregion
+
+
+        public static string GetInt24(string propertName)
+        {
+            var str = string.Format(@"
+            msg.{0}=ByteBuffer.Int24.ReadInt24(buffer, offset);
+            offset+=3;", propertName);
+            return str;
+        }
+        public static string GetUInt24(string propertName)
+        {
+            var str = string.Format(@"
+            msg.{0}=ByteBuffer.UInt24.ReadUInt24(buffer, offset);
+            offset+=3;", propertName);
+            return str;
+        }
+
+        public static string GetInt24Array(string propertName)
+        {
+            var str = string.Format(@"
+            var count{0} = buffer[offset];
+            offset++;
+            var list{0} = new List<float>();
+            for (var i = 0; i < count{0}; i++)
+            {{
+                var item = ByteBuffer.Int24.ReadInt24(buffer, offset);
+                offset += 3;
+                list{0}.Add(item);
+            }}
+            msg.{0} = list{0};", propertName);
+            return str;
+        }
+
+        public static string GetUInt24Array(string propertName)
+        {
+            var str = string.Format(@"
+            var count{0} = buffer[offset];
+            offset++;
+            var list{0} = new List<float>();
+            for (var i = 0; i < count{0}; i++)
+            {{
+                var item = ByteBuffer.UInt24.ReadUInt24(buffer, offset);
+                offset += 3;
+                list{0}.Add(item);
+            }}
+            msg.{0} = list{0};", propertName);
+            return str;
+        }
+
+
 
     }
 }

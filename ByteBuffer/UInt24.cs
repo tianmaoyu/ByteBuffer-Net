@@ -26,10 +26,16 @@ namespace ByteBuffer
         public static Byte[] GetBytes(int value)
         {
             var bytes = new byte[3];
-            bytes[0] = (byte)(value & 0xFF);
+            bytes[0] = (byte) value;
             bytes[1] = (byte)(value >> 8);
             bytes[2] = (byte)(value >> 16);
             return bytes;
+
+            //var bytes = new byte[3];
+            //bytes[0] = (byte)(value & 0xFF);
+            //bytes[1] = (byte)((value >> 8) & 0xFF);
+            //bytes[2] = (byte)((value >> 16) & 0xFF);
+            //return bytes;
         }
 
     }

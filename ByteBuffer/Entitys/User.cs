@@ -22,13 +22,6 @@ namespace ByteBuffer.Entitys
         [ByteMember(4, ByteType.Int16)]
         public Int16 Int16 { get; set; }
 
-        //public float Float { get; set; }
-
-        //public DateTime DateTime { get; set; }
-
-        //public byte Byte { get; set; }
-
-        //public sbyte SByte { get; set; }
 
         [ByteMember(5, ByteType.UInt16)]
         public ushort UShort { get; set; }
@@ -58,38 +51,38 @@ namespace ByteBuffer.Entitys
         [ByteMember(10, ByteType.ObjectArray, "Role")]
         public List<Role> RoleList { get; set; }
 
-        public byte[] Serialize()
-        {
+        //public byte[] Serialize()
+        //{
 
 
-            var bytes = new byte[14];
-            Span<byte> span = new Span<byte>(bytes);
+        //    var bytes = new byte[14];
+        //    Span<byte> span = new Span<byte>(bytes);
 
-            //BitConverter.w(UInt16);
+        //    //BitConverter.w(UInt16);
 
-            return new byte[2];
-        }
-
-
-        public User Deserialize(ArraySegment<byte> arraySegment)
-        {
-            //var offSet = 0;
-            //var buffer = new byte[20];
-            //var length = this.IdList.Count;
-            //buffer[offSet] = (byte)length;
-            //offSet++;
-            //foreach (var id in IdList)
-            //{
-            //    buffer[offSet] = (byte)id;
-            //    offSet++;
-            //}
+        //    return new byte[2];
+        //}
 
 
+        //public User Deserialize(ArraySegment<byte> arraySegment)
+        //{
+        //    //var offSet = 0;
+        //    //var buffer = new byte[20];
+        //    //var length = this.IdList.Count;
+        //    //buffer[offSet] = (byte)length;
+        //    //offSet++;
+        //    //foreach (var id in IdList)
+        //    //{
+        //    //    buffer[offSet] = (byte)id;
+        //    //    offSet++;
+        //    //}
 
-            var user = new User();
 
-            return user;
-        }
+
+        //    var user = new User();
+
+        //    return user;
+        //}
     }
 
     [BtyeContract]

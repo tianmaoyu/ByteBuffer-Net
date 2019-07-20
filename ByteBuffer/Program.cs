@@ -20,32 +20,75 @@ namespace ByteBuffer
         public static byte[] Clientbuffer = new byte[1024 * 10];
 
         public static Action<string> onTest;
-        public static class BitTools
+
+        public static Byte[] GetBytes(int value)
         {
-            public static int SignExtend32(int value, int bits)
-            {
-                int shift = 8 * sizeof(int) - bits;
-                return (value << shift) >> shift;
-            }
+            var bytes = new byte[3];
+            bytes[0] = (byte)(value);
+            bytes[1] = (byte)((value >> 8));
+            bytes[2] = (byte)((value >> 16) );
+            return bytes;
+
+            //var bytes = new byte[3];
+            //bytes[0] = (byte)(value & 0xFF);
+            //bytes[1] = (byte)((value >> 8) & 0xFF);
+            //bytes[2] = (byte)((value >> 16) & 0xFF);
+            //return bytes;
+
         }
+
+        public static int ReadInt24(byte[] buffer)
+        {
+            return buffer[0] | buffer[1] << 8 | ((sbyte)buffer[2] << 16) /*| buffer[3] << 24*/;
+            Console.WriteLine(buffer[0].ToString());
+            Console.WriteLine((buffer[1] << 8).ToString());
+            Console.WriteLine((((sbyte)buffer[2] << 16)).ToString());
+        }
+
+        public static int ReadUInt24(byte[] buffer)
+        {
+            return buffer[0] | buffer[1] << 8 | (buffer[2] << 16) /*| buffer[3] << 24*/;
+        }
+
         static void Main(string[] args)
         {
-            var bytes0= System.Text.Encoding.Unicode.GetBytes("sssssssssss 你好");
 
+
+            for(var i = Int24.MiniValue; i < Int24.MaxVlaue; i++)
+            {
+                var _i = Int24.ReadInt24(Int24.GetBytes(i), 0);
+                if (i != _i)
+                {
+                    Console.Beep();
+                    Console.WriteLine("不相等");
+                }
+            }
+            Console.ReadLine();
+
+            Int16 int16 = 655;
+           
+            var bites = BitConverter.GetBytes(-12);
+            var cc = ReadInt24(bites);
+            var cc2= ReadUInt24(bites);
+            //var value5 = ReadUInt24(-12);
+
+            var bites2 = BitConverter.GetBytes(int16);
+
+            var bites3 = new byte[2];
+            //bites3[0] =(byte)(-12 & 0xff);
+            //bites3[1] = (byte)((-12) >> 8);
+            var bite4 = GetBytes(Int24.MiniValue);
+
+            var bytes0= System.Text.Encoding.Unicode.GetBytes("sssssssssss 你好");
             var bytes = UInt24.GetBytes(UInt24.MaxVlaue);
             var value = UInt24.ReadUInt24(bytes, 0);
-
             var bytes4 = Int24.GetBytes(Int24.MiniValue);
             var bytes2 = Int24.GetBytes(-12);
             var value2 = Int24.ReadInt24(bytes4, 0);
 
-            CodeGenerate.Run();
 
-
-            return;
-
-
-
+            //return;
+           // CodeGenerate.Run();
 
             //var client = new Client();
             //client.ClientId = 0;
